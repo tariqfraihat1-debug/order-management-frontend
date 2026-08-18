@@ -1,0 +1,73 @@
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="row justify-content-center w-100">
+    <div class="col-12 col-md-6 col-lg-4">
+
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+
+          <div class="text-center mb-4">
+            <h1 class="fw-bold mb-1">OrderSys</h1>
+            <p class="text-secondary mb-0">
+              Sign in to your account
+            </p>
+          </div>
+
+          @if (error()) {
+            <div class="alert alert-danger">
+              {{ error() }}
+            </div>
+          }
+
+          <form (ngSubmit)="login()">
+
+            <app-form-field
+              label="Username"
+              [required]="true">
+
+              <input
+                type="text"
+                class="form-control"
+                name="username"
+                [ngModel]="username()"
+                (ngModelChange)="username.set($event)"
+                required>
+
+            </app-form-field>
+
+            <app-form-field
+              label="Password"
+              [required]="true">
+
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                [ngModel]="password()"
+                (ngModelChange)="password.set($event)"
+                required>
+
+            </app-form-field>
+
+            <div class="d-grid">
+              <app-button
+                type="submit"
+                variant="primary"
+                [disabled]="loading()">
+
+                @if (loading()) {
+                  Signing in...
+                } @else {
+                  Sign In
+                }
+
+              </app-button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

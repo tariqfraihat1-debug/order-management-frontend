@@ -1,0 +1,37 @@
+<aside class="app-sidebar min-vh-100">
+
+  <nav class="nav flex-column gap-1 p-3">
+
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      class="sidebar-link nav-link d-flex align-items-center gap-3 rounded px-3 py-2 fw-medium">
+
+      <fa-icon [icon]="faChartPie"></fa-icon>
+      <span>Dashboard</span>
+
+    </a>
+
+    <a
+      routerLink="/orders"
+      routerLinkActive="active"
+      class="sidebar-link nav-link d-flex align-items-center gap-3 rounded px-3 py-2 fw-medium">
+
+      <fa-icon [icon]="faCartShopping"></fa-icon>
+      <span>Orders</span>
+
+    </a>
+
+    <a
+      routerLink="/customers"
+      routerLinkActive="active"
+      class="sidebar-link nav-link d-flex align-items-center gap-3 rounded px-3 py-2 fw-medium">
+
+      <fa-icon [icon]="faUsers"></fa-icon>
+      <span>Customers</span>
+
+    </a>
+
+  </nav>
+
+</aside>

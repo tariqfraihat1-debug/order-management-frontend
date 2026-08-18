@@ -1,0 +1,33 @@
+<div
+  class="d-flex flex-column align-items-center justify-content-center text-center py-5">
+
+  <fa-icon
+    [icon]="icon()"
+    class="fs-2 text-secondary mb-3">
+  </fa-icon>
+
+  <h3 class="fs-6 fw-semibold mb-2">
+    {{ headline() }}
+  </h3>
+
+  @if (description()) {
+    <p class="text-secondary small mb-3">
+      {{ description() }}
+    </p>
+  }
+
+  @if (actionLabel()) {
+    <app-button
+      variant="primary"
+      (clicked)="action.emit()">
+
+      @if (actionIcon()) {
+        <fa-icon [icon]="actionIcon()!"></fa-icon>
+      }
+
+      {{ actionLabel() }}
+
+    </app-button>
+  }
+
+</div>

@@ -1,0 +1,30 @@
+<div
+  class="d-flex flex-wrap align-items-center gap-2 p-3 bg-white border rounded">
+
+  <div class="d-flex align-items-center gap-2 text-secondary me-2">
+
+    <fa-icon [icon]="faFilter"></fa-icon>
+
+    <span class="fw-semibold">
+      Filters
+    </span>
+
+  </div>
+
+  <ng-content></ng-content>
+
+  <button
+    type="button"
+    class="btn btn-sm btn-link text-secondary text-decoration-none ms-auto"
+    (click)="clear.emit()">
+
+    <fa-icon
+      [icon]="faXmark"
+      class="me-1">
+    </fa-icon>
+
+    Clear all
+
+  </button>
+
+</div>

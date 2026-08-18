@@ -1,1 +1,163 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --app-sidebar: #0f172a;
+  --app-topbar: #1e293b;
+  --app-background: #f8fafc;
+  --primary-action: #2563eb;
+  --border-divider: #e2e8f0;
+  --primary-text: #0f172a;
+  --confirmed: #0369a1;
+  --shipped: #15803d;
+  --cancelled: #991b1b;
+  --pending: #b45309;
+  --danger: #dc2626;
+  --muted-text: #64748b;
+}
+
+/* Topbar */
+
+.app-topbar {
+  background-color: var(--app-topbar);
+}
+
+/* Page title */
+
+.page-title {
+  color: var(--primary-text);
+  font-size: 20px;
+}
+
+/* Sidebar */
+
+.app-sidebar {
+  width: 240px;
+  background-color: var(--app-sidebar);
+}
+
+.sidebar-link {
+  color: #cbd5e1;
+  font-size: 13px;
+}
+
+.sidebar-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-link.active {
+  color: #ffffff;
+  background-color: var(--primary-action);
+}
+
+/* Status badges */
+
+.status-badge {
+  font-size: 11px;
+}
+
+.status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.status-pending {
+  color: var(--pending);
+  background-color: #fff7ed;
+}
+
+.status-confirmed {
+  color: var(--confirmed);
+  background-color: #eff6ff;
+}
+
+.status-shipped,
+.status-active {
+  color: var(--shipped);
+  background-color: #f0fdf4;
+}
+
+.status-cancelled {
+  color: var(--cancelled);
+  background-color: #fef2f2;
+}
+
+.status-inactive {
+  color: var(--muted-text);
+  background-color: #f1f5f9;
+}
+
+/* Order status distribution */
+
+.distribution-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+/* Search */
+
+.search-input-part {
+  background-color: transparent;
+  border-color: var(--border-divider);
+  border-width: 1.5px;
+  color: var(--border-divider);
+}
+
+.search-input-part::placeholder {
+  color: var(--border-divider);
+  opacity: 1;
+}
+
+.search-input-part:focus {
+  background-color: transparent;
+  border-color: var(--border-divider);
+  color: var(--border-divider);
+  box-shadow: none;
+}
+
+/* Cards */
+
+.card {
+  border: 2px solid var(--border-divider);
+}
+
+.form-control {
+  border-color: var(--border-divider);
+  border-width: 2px;
+}
+
+.input-group-text {
+  border-color: var(--border-divider);
+  border-width: 2px;
+}
+
+.border,
+.border-top,
+.border-bottom,
+.border-start,
+.border-end {
+  border-color: var(--border-divider) !important;
+  border-width: 2px !important;
+}
+
+.section-header {
+  border-bottom: 2px solid var(--border-divider);
+}
+
+.table thead th {
+  background-color: #f1f5f9;
+  border-bottom: 2px solid var(--border-divider);
+  color: var(--muted-text);
+}
+
+.table tbody td {
+  border-bottom: 2px solid var(--border-divider);
+}
+
+.section-divider {
+  border-top: 2px solid var(--border-divider);
+}

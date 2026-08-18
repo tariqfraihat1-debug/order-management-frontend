@@ -1,0 +1,13 @@
+<button
+  [type]="type()"
+  class="btn d-inline-flex align-items-center justify-content-center gap-2"
+  [class.btn-primary]="variant() === 'primary'"
+  [class.btn-outline-secondary]="variant() === 'secondary'"
+  [class.btn-outline-danger]="variant() === 'danger'"
+  [class.btn-outline-success]="variant() === 'success'"
+  [disabled]="disabled()"
+  (click)="onClick()">
+
+  <ng-content></ng-content>
+
+</button>

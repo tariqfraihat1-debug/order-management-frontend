@@ -1,0 +1,47 @@
+<header class="app-topbar d-flex align-items-center">
+
+  <div
+    class="d-flex align-items-center gap-2 px-4 py-3 border-end border-secondary"
+    style="width: 240px;">
+
+    <div
+      class="bg-primary text-white rounded d-flex align-items-center justify-content-center fw-bold"
+      style="width: 40px; height: 40px;">
+      O
+    </div>
+
+    <span class="text-white fw-bold">
+      OrderSys
+    </span>
+
+  </div>
+
+  <div
+    class="flex-grow-1 d-flex align-items-center justify-content-between gap-3 px-4">
+
+    <div style="width: 300px;">
+      <app-search-input
+        placeholder="Search orders, customers...">
+      </app-search-input>
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+
+      <button
+        type="button"
+        class="btn text-warning border-0"
+        aria-label="Notifications">
+        <fa-icon [icon]="faBell"></fa-icon>
+      </button>
+
+      <div
+        class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-semibold"
+        style="width: 40px; height: 40px;">
+        {{ initials() }}
+      </div>
+
+    </div>
+
+  </div>
+
+</header>

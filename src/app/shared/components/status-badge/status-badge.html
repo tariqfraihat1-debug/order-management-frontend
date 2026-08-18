@@ -1,0 +1,9 @@
+<span
+  class="status-badge d-inline-flex align-items-center gap-1 rounded-pill px-2 py-1 fw-semibold"
+  [ngClass]="'status-' + status().toLowerCase()">
+
+  <span class="status-dot"></span>
+
+  {{ text() || status() }}
+
+</span>

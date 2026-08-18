@@ -1,0 +1,12 @@
+<div class="input-group">
+  <span class="input-group-text search-input-part border-end-0">
+    <fa-icon [icon]="faSearch"></fa-icon>
+  </span>
+
+  <input
+    type="search"
+    class="form-control search-input-part border-start-0 shadow-none"
+    [placeholder]="placeholder()"
+    [value]="value()"
+    (input)="onInput($event)">
+</div>

@@ -1,0 +1,29 @@
+<div class="mb-3">
+
+  <label class="form-label fw-semibold">
+
+    {{ label() }}
+
+    @if (required()) {
+      <span class="text-danger">*</span>
+    }
+
+  </label>
+
+  <ng-content></ng-content>
+
+  @if (error()) {
+
+    <div class="invalid-feedback d-block">
+      {{ error() }}
+    </div>
+
+  } @else if (hint()) {
+
+    <div class="form-text">
+      {{ hint() }}
+    </div>
+
+  }
+
+</div>

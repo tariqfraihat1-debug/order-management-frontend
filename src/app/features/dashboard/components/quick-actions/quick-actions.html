@@ -1,0 +1,30 @@
+<div class="card h-100">
+  <div class="card-body">
+    <h2 class="fs-6 fw-bold mb-3">Quick Actions</h2>
+
+    <div class="d-grid gap-2">
+      <a routerLink="/orders/create" class="btn btn-primary">+ New Order</a>
+      <a routerLink="/customers/create" class="btn btn-outline-secondary">+ New Customer</a>
+    </div>
+
+    <div class="section-divider my-3"></div>
+
+    <h3 class="small fw-bold text-secondary mb-3">NEEDS ATTENTION</h3>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span class="small">Pending orders</span>
+
+      <a routerLink="/orders" [queryParams]="{ status: 'Pending' }" class="text-decoration-none">
+        <app-status-badge status="Pending" [text]="pendingOrders().toString()"></app-status-badge>
+      </a>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="small">Inactive customers</span>
+
+      <a routerLink="/customers" [queryParams]="{ status: 'inactive' }" class="text-decoration-none">
+        <app-status-badge status="Inactive" [text]="inactiveCustomers().toString()"></app-status-badge>
+      </a>
+    </div>
+  </div>
+</div>

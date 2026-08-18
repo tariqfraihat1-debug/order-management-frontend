@@ -1,0 +1,19 @@
+<td>
+  <a [routerLink]="['/orders', order().orderId]" class="fw-semibold text-primary text-decoration-none">
+    #{{ order().orderNumber }}
+  </a>
+</td>
+
+<td>{{ order().customerName }}</td>
+
+<td>
+  <app-status-badge [status]="order().orderStateName"></app-status-badge>
+</td>
+
+<td class="fw-semibold">
+  {{ order().totalAmount | number:'1.2-2' }} {{ order().currencyCode }}
+</td>
+
+<td class="text-secondary">
+  {{ order().createdDate | date:'MMM d' }}
+</td>
