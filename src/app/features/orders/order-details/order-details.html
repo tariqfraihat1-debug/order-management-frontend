@@ -1,1 +1,78 @@
-<p>order-details works!</p>
+@if(loading()){
+<app-loading message="Loading order details..."></app-loading>
+}@else if(error()){
+<div class="alert alert-danger">{{error()}}</div>
+}@else if(order();as data){
+
+<ng-template #headerLeft>
+<div>
+
+<div class="d-flex align-items-center gap-1 small text-secondary">
+<a routerLink="/orders" class="text-primary text-decoration-none">
+Orders
+</a>
+
+<fa-icon [icon]="faChevronRight"></fa-icon>
+
+<span>#ORD-{{data.createdDate | date:'yyyy'}}-{{data.orderNumber}}</span>
+</div>
+
+<h1 class="fs-4 fw-bold mb-0 mt-2">
+#ORD-{{data.createdDate | date:'yyyy'}}-{{data.orderNumber}}
+</h1>
+
+</div>
+</ng-template>
+
+<ng-template #headerRight>
+<app-status-badge [status]="data.orderStateName"></app-status-badge>
+</ng-template>
+
+<app-content-header
+[leftTemplate]="headerLeft"
+[rightTemplate]="headerRight">
+</app-content-header>
+
+<div class="p-3">
+<app-order-summary
+class="d-block mt-3"
+[order]="data">
+</app-order-summary>
+
+<app-order-actions
+[order]="data"
+(actionSelected)="onActionSelected($event)">
+</app-order-actions>
+
+<app-order-items
+class="d-block mt-3"
+[items]="data.orderItems"
+[totalAmount]="data.totalAmount"
+[editable]="isEditable()"
+(addSelected)="openAddItem()"
+(editSelected)="editItem($event)"
+(removeSelected)="removeItem($event)">
+</app-order-items>
+
+</div>
+
+<app-order-item-dialog
+[open]="showItemDialog()"
+[mode]="itemDialogMode()"
+[item]="selectedItem()"
+(saved)="addItem($event)"
+(quantitySaved)="updateItemQuantity($event)"
+(cancelled)="closeItemDialog()">
+</app-order-item-dialog>
+
+<app-confirm-dialog
+[open]="showConfirmDialog()"
+[title]="confirmationTitle()"
+[message]="confirmationMessage()"
+[confirmText]="confirmationText()"
+[danger]="isDangerAction()"
+(confirmed)="confirmSelectedAction()"
+(cancelled)="cancelDialog()">
+</app-confirm-dialog>
+
+}

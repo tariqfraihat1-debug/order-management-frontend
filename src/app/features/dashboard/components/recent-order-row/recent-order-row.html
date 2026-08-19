@@ -1,7 +1,9 @@
 <td>
-  <a [routerLink]="['/orders', order().orderId]" class="fw-semibold text-primary text-decoration-none">
-    #{{ order().orderNumber }}
-  </a>
+<a
+  [routerLink]="['/orders', order().orderId]"
+  class="fw-semibold text-primary text-decoration-none">
+  #ORD-{{ order().createdDate | date:'yyyy' }}-{{ order().orderNumber }}
+</a>
 </td>
 
 <td>{{ order().customerName }}</td>

@@ -6,6 +6,7 @@ import { DashboardSummary } from '../../core/models/dashboard/dashboard-summary.
 import { DashboardService } from '../../core/services/dashboard.service';
 import { ContentHeader } from '../../shared/components/content-header/content-header';
 import { Loading } from '../../shared/components/loading/loading';
+import { CompactCurrencyPipe } from '../../shared/pipes/compact-currency-pipe';
 import { DashboardKpi, KpiCard } from './components/kpi-card/kpi-card';
 import { OrderStatusDistributionBar } from './components/order-status-distribution-bar/order-status-distribution-bar';
 import { QuickActions } from './components/quick-actions/quick-actions';
@@ -15,12 +16,14 @@ import { RecentOrderRow } from './components/recent-order-row/recent-order-row';
   selector: 'app-dashboard',
   standalone: true,
   imports: [DatePipe, RouterLink, ContentHeader, Loading, KpiCard, OrderStatusDistributionBar, QuickActions, RecentOrderRow],
+  providers: [CompactCurrencyPipe],
   templateUrl: './dashboard.html'
 })
 export class Dashboard implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly compactCurrencyPipe = inject(CompactCurrencyPipe);
 
   dashboard = signal<DashboardSummary | null>(null);
   loading = signal(true);
@@ -40,7 +43,7 @@ export class Dashboard implements OnInit {
       { label: 'Total Orders', value: data.totalOrders, clickable: true },
       { label: 'Active Customers', value: data.activeCustomers, clickable: true },
       { label: 'Pending Review', value: data.pendingReview, clickable: true, highlight: true },
-      { label: 'Month Revenue', value: data.monthRevenue }
+      { label: 'Month Revenue', value: this.compactCurrencyPipe.transform(data.monthRevenue) }
     ];
   });
 

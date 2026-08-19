@@ -15,7 +15,6 @@
   } @else if (error()) {
     <div class="alert alert-danger" role="alert">{{ error() }}</div>
   } @else if (dashboard(); as data) {
-
     <div class="row g-3 mb-3">
       @for (kpi of kpis(); track kpi.label) {
         <div class="col-12 col-md-6 col-xl-3">
@@ -43,10 +42,7 @@
 
     <div class="row g-3">
       <div class="col-12 col-lg-3">
-        <app-quick-actions
-          [pendingOrders]="data.pendingReview"
-          [inactiveCustomers]="inactiveCustomers()">
-        </app-quick-actions>
+        <app-quick-actions [pendingOrders]="data.pendingReview" [inactiveCustomers]="inactiveCustomers()"></app-quick-actions>
       </div>
 
       <div class="col-12 col-lg-9">
@@ -66,7 +62,7 @@
               <p class="text-secondary mb-0">No recent orders available.</p>
             </div>
           } @else {
-            <div class="table-responsive px-3 pb-3">
+            <div class="table-responsive ">
               <table class="table table-hover align-middle mb-0">
                 <thead>
                   <tr>
@@ -77,7 +73,6 @@
                     <th>Date</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   @for (order of data.recentOrders; track order.orderId) {
                     <tr app-recent-order-row [order]="order"></tr>

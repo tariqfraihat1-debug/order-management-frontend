@@ -1,0 +1,127 @@
+@if(open()){
+<div class="modal d-block" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-header">
+<h5 class="modal-title fw-bold">
+{{mode()==='add'?'Add Order Item':'Update Item Quantity'}}
+</h5>
+
+<button class="btn btn-link text-secondary p-0" (click)="cancel()">
+<fa-icon [icon]="faXmark"></fa-icon>
+</button>
+</div>
+
+<div class="modal-body">
+
+@if(error()){
+<div class="alert alert-danger py-2">
+{{error()}}
+</div>
+}
+
+@if(mode()==='add'){
+
+<label class="form-label small fw-semibold">
+Item Name <span class="text-danger">*</span>
+</label>
+
+<input class="form-control mb-1"
+maxlength="120"
+placeholder="Wireless Mouse"
+[ngModel]="itemName()"
+(ngModelChange)="itemName.set($event)">
+
+<div class="form-text mb-3">
+Primary display name
+</div>
+
+<label class="form-label small fw-semibold">
+Item Name (Alternate)
+</label>
+
+<input class="form-control mb-1"
+maxlength="120"
+placeholder="Optional alternate name..."
+[ngModel]="itemNameAlternate()"
+(ngModelChange)="itemNameAlternate.set($event)">
+
+<div class="form-text mb-3">
+Nullable. Max 120 characters.
+</div>
+
+}
+
+<div class="row">
+
+<div class="col-md-6">
+<label class="form-label small fw-semibold">
+Quantity <span class="text-danger">*</span>
+</label>
+
+<input type="number"
+class="form-control"
+min="0.01"
+step="0.01"
+[ngModel]="quantity()"
+(ngModelChange)="quantity.set($event)">
+
+<div class="form-text">
+Positive number, 2 decimal places
+</div>
+</div>
+
+@if(mode()==='add'){
+<div class="col-md-6">
+
+<label class="form-label small fw-semibold">
+Unit Price <span class="text-danger">*</span>
+</label>
+
+<input type="number"
+class="form-control"
+min="0.01"
+step="0.01"
+[ngModel]="price()"
+(ngModelChange)="price.set($event)">
+
+<div class="form-text">
+In USD, positive, > 0
+</div>
+
+</div>
+}
+
+</div>
+
+@if(mode()==='add'){
+<div class="bg-light rounded p-3 mt-3">
+<div class="d-flex justify-content-between">
+<span class="small text-secondary">
+Line Total Preview
+</span>
+
+<strong>
+{{quantity()*price()|currency:'USD':'symbol':'1.2-2'}}
+</strong>
+</div>
+</div>
+}
+
+</div>
+
+<div class="modal-footer">
+<button class="btn btn-light border" (click)="cancel()">
+Cancel
+</button>
+
+<button class="btn btn-primary" (click)="save()">
+{{mode()==='add'?'Add Item':'Update Quantity'}}
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-backdrop show"></div>
+}

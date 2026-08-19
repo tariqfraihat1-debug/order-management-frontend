@@ -1,0 +1,60 @@
+<td>
+  <a
+    [routerLink]="['/orders', order().orderId]"
+    class="fw-semibold text-primary text-decoration-none">
+    #ORD-{{ order().createdDate | date:'yyyy' }}-{{ order().orderNumber }}
+  </a>
+</td>
+
+<td>{{ order().customerName }}</td>
+
+<td>
+  <app-status-badge [status]="order().orderStateName"></app-status-badge>
+</td>
+
+<td class="fw-semibold">
+  {{ order().totalAmount | currency:'USD':'symbol':'1.2-2' }}
+</td>
+
+<td
+  [title]="order().orderItemNames.join(', ')"
+  class="cursor-pointer">
+  {{ order().orderItemsCount }}
+</td>
+
+<td class="text-secondary">
+  {{ order().createdDate | date:'MMM d, y' }}
+</td>
+
+<td>
+  <div class="d-flex align-items-center gap-3">
+
+    <a
+      [routerLink]="['/orders', order().orderId]"
+      class="text-secondary text-decoration-none"
+      title="View order">
+      <fa-icon [icon]="faEye"></fa-icon>
+    </a>
+
+    @if (order().orderStateName === 'Pending' || order().orderStateName === 'Confirmed') {
+      <button
+        type="button"
+        class="btn btn-link text-secondary p-0 border-0"
+        title="Manage order"
+        (click)="onAction()">
+        <fa-icon [icon]="faPen"></fa-icon>
+      </button>
+    }
+
+    @if (order().orderStateName === 'Cancelled') {
+      <button
+        type="button"
+        class="btn btn-link text-danger p-0 border-0"
+        title="Delete order"
+        (click)="onDelete()">
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </button>
+    }
+
+  </div>
+</td>

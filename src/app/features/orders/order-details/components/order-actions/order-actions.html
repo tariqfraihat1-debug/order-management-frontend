@@ -1,0 +1,74 @@
+<div class="card mb-3">
+  <div class="card-body py-3">
+    <div class="d-flex align-items-center justify-content-between gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <span class="small fw-bold text-secondary">Actions:</span>
+
+        @if (order().orderStateName === 'Pending') {
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+            [disabled]="order().orderItems.length === 0"
+            (click)="actionSelected.emit('confirm')">
+            <fa-icon [icon]="faCheck" class="me-1"></fa-icon>
+            Confirm Order
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            (click)="actionSelected.emit('cancel')">
+            <fa-icon [icon]="faXmark" class="me-1"></fa-icon>
+            Cancel Order
+          </button>
+        }
+
+        @if (order().orderStateName === 'Confirmed') {
+          <button
+            type="button"
+            class="btn btn-outline-success btn-sm"
+            (click)="actionSelected.emit('ship')">
+            <fa-icon [icon]="faBox" class="me-1"></fa-icon>
+            Ship Order
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            (click)="actionSelected.emit('cancel')">
+            <fa-icon [icon]="faXmark" class="me-1"></fa-icon>
+            Cancel Order
+          </button>
+        }
+
+        @if (order().orderStateName === 'Cancelled') {
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            (click)="actionSelected.emit('delete')">
+            <fa-icon [icon]="faTrash" class="me-1"></fa-icon>
+            Delete Order
+          </button>
+        }
+      </div>
+
+      <div class="small text-secondary text-end">
+        @if (order().orderStateName === 'Pending') {
+          Actions available in Pending state
+        }
+
+        @if (order().orderStateName === 'Confirmed') {
+          Actions available in Confirmed state
+        }
+
+        @if (order().orderStateName === 'Shipped') {
+          This order is shipped and read-only.
+        }
+
+        @if (order().orderStateName === 'Cancelled') {
+          Deleting removes all items permanently.
+        }
+      </div>
+    </div>
+  </div>
+</div>
