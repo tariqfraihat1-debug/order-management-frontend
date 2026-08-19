@@ -1,0 +1,65 @@
+<td>
+
+<a
+class="text-primary fw-semibold text-decoration-none"
+(click)="viewSelected.emit(customer())">
+
+{{customer().customerName}}
+
+</a>
+
+</td>
+
+
+<td>
+{{customer().email}}
+</td>
+
+
+<td>
+{{customer().phone}}
+</td>
+
+
+<td>
+
+<app-status-badge
+[status]="customer().isActive ? 'Active':'Inactive'">
+</app-status-badge>
+
+</td>
+
+
+<td>
+{{customer().orderCount}}
+</td>
+
+
+<td>
+
+<div class="d-flex align-items-center gap-2">
+
+
+<button
+class="btn btn-link p-0 text-secondary"
+title="View"
+(click)="viewSelected.emit(customer())">
+
+<fa-icon [icon]="faEye"></fa-icon>
+
+</button>
+
+
+<button
+class="btn btn-link p-0 text-secondary"
+title="Edit"
+(click)="editSelected.emit(customer())">
+
+<fa-icon [icon]="faPen"></fa-icon>
+
+</button>
+
+
+</div>
+
+</td>

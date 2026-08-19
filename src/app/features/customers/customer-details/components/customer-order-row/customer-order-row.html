@@ -1,0 +1,55 @@
+<td>
+
+<a
+[routerLink]="['/orders',order().orderId]"
+class="text-primary fw-semibold text-decoration-none">
+
+#ORD-{{order().createdDate | date:'yyyy'}}-{{order().orderNumber}}
+
+</a>
+
+</td>
+
+
+
+<td>
+
+<app-status-badge
+[status]="order().orderStateName">
+</app-status-badge>
+
+</td>
+
+
+
+<td>
+
+{{order().totalAmount | currency}}
+
+</td>
+
+
+<td>
+{{order().orderItemsCount}}
+</td>
+
+
+<td>
+
+{{order().createdDate | date:'MMM d, yyyy'}}
+
+</td>
+
+
+
+<td>
+
+<a
+[routerLink]="['/orders',order().orderId]"
+class="btn btn-link p-0 text-secondary">
+
+<fa-icon [icon]="faEye"></fa-icon>
+
+</a>
+
+</td>

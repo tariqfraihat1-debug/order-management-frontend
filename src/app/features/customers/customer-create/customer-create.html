@@ -1,1 +1,49 @@
-<p>customer-create works!</p>
+<ng-template #headerLeft>
+
+<app-breadcrumb
+[items]="[
+{
+label:'Customers',
+link:'/customers'
+},
+{
+label:'Create Customer'
+}
+]">
+</app-breadcrumb>
+
+
+<h1 class="page-title fw-bold mb-0 mt-2">
+Create Customer
+</h1>
+
+</ng-template>
+
+
+
+<app-content-header
+[leftTemplate]="headerLeft">
+</app-content-header>
+
+
+
+<div class="p-4">
+
+
+@if(error()){
+
+<div class="alert alert-danger">
+{{error()}}
+</div>
+
+}
+
+
+
+<app-customer-form
+(saved)="createCustomer($event)"
+(cancelled)="cancel()">
+</app-customer-form>
+
+
+</div>

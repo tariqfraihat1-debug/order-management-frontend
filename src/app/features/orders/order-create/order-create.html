@@ -1,13 +1,15 @@
 <ng-template #createLeft>
-<div class="d-flex align-items-center gap-1 small text-secondary">
-<a routerLink="/orders" class="text-primary text-decoration-none">
-Orders
-</a>
-
-<fa-icon [icon]="faChevronRight"></fa-icon>
-
-<span>New Order</span>
-</div>
+<app-breadcrumb
+[items]="[
+{
+label:'Orders',
+link:'/orders'
+},
+{
+label:'New Order'
+}
+]">
+</app-breadcrumb>
 
 <h1 class="page-title fw-bold mb-0">Create Order</h1>
 </ng-template>

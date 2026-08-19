@@ -1,16 +1,12 @@
-export interface CreateOrderRequest {
-  orderNumber:number;
-  customerId:number;
-  city:string;
-  street:string;
-  buildingNumber:string;
-  currencyCode:string;
-  orderItems:CreateOrderItemRequest[];
-}
+import { CreateOrderItemRequest } from "./create-order-item-request.model";
 
-export interface CreateOrderItemRequest {
-  itemName:string;
-  itemNameAlternate:string|null;
-  quantity:number;
-  price:number;
+
+export interface CreateOrderRequest{
+orderNumber:number;
+customerId:number;
+city:string;
+street:string;
+buildingNumber:string;
+currencyCode:string;
+orderItems:CreateOrderItemRequest[];
 }

@@ -1,1 +1,66 @@
-<p>customer-edit works!</p>
+@if(loading()){
+
+<app-loading message="Loading customer..."></app-loading>
+
+}
+@else if(error()){
+
+<div class="alert alert-danger">
+{{error()}}
+</div>
+
+}
+@else if(customer(); as data){
+
+
+<ng-template #headerLeft>
+
+<app-breadcrumb
+[items]="[
+{
+label:'Customers',
+link:'/customers'
+},
+{
+label:data.customerName,
+link:'/customers/'+data.customerId
+},
+{
+label:'Edit'
+}
+]">
+</app-breadcrumb>
+
+
+<h1 class="page-title fw-bold mb-0 mt-2">
+Edit Customer
+</h1>
+
+</ng-template>
+
+
+
+<app-content-header
+[leftTemplate]="headerLeft">
+</app-content-header>
+
+
+
+<div class="p-4">
+
+
+<app-customer-form
+
+[customer]="data"
+
+(saved)="updateCustomer($event)"
+
+(cancelled)="cancel()">
+
+</app-customer-form>
+
+
+</div>
+
+
+}

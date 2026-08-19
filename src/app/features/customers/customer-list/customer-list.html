@@ -1,1 +1,142 @@
-<p>customer-list works!</p>
+<ng-template #customersLeft>
+<h1 class="page-title fw-bold mb-0">
+Customers
+</h1>
+</ng-template>
+
+
+<ng-template #customersRight>
+<a
+routerLink="/customers/create"
+class="btn btn-primary">
++ New Customer
+</a>
+</ng-template>
+
+
+<app-content-header
+[leftTemplate]="customersLeft"
+[rightTemplate]="customersRight">
+</app-content-header>
+
+
+
+<div class="p-4">
+
+
+@if(loading()){
+
+<app-loading message="Loading customers..."></app-loading>
+
+}
+@else if(loadError()){
+
+<div class="alert alert-danger">
+{{loadError()}}
+</div>
+
+}
+@else{
+
+
+<div class="card overflow-hidden">
+
+
+<div class="card-body border-bottom py-3">
+
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+
+
+<app-customer-filter
+
+(searchChanged)="onSearch($event)"
+
+(statusChanged)="onStatusChange($event)">
+
+</app-customer-filter>
+
+
+
+<span class="small text-secondary">
+
+{{filteredCustomers().length}} customers
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+@if(filteredCustomers().length > 0){
+
+
+<app-customer-table
+
+[customers]="filteredCustomers()"
+
+(viewSelected)="viewCustomer($event)"
+
+(editSelected)="editCustomer($event)">
+
+</app-customer-table>
+
+
+}
+@else{
+
+
+@if(search() || statusFilter()){
+
+
+<app-empty-state
+
+[icon]="'search'"
+
+[title]="'No customers found'"
+
+[message]="'No customers match your search. Check spelling or try a different name or email address.'"
+
+[primaryText]="'Clear Filters'"
+
+(primaryAction)="clearFilters()">
+
+</app-empty-state>
+
+
+}
+@else{
+
+
+<app-empty-state
+
+[icon]="'customers'"
+
+[title]="'No customers yet'"
+
+[message]="'Add your first customer before placing any orders.'"
+
+[primaryText]="'Add First Customer'"
+
+primaryLink="/customers/create">
+
+</app-empty-state>
+
+
+}
+
+
+}
+
+
+</div>
+
+
+}
+
+
+</div>

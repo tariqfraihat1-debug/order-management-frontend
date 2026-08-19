@@ -1,0 +1,182 @@
+<div class="card">
+
+<div class="card-header fw-bold">
+Customer Details
+</div>
+
+
+<div class="card-body">
+
+
+<div class="mb-3">
+
+<label class="form-label fw-semibold">
+Full Name <span class="text-danger">*</span>
+</label>
+
+
+<input
+type="text"
+class="form-control"
+[ngModel]="customerName()"
+(ngModelChange)="customerName.set($event)"
+placeholder="Enter customer full name...">
+
+
+@if(nameError()){
+
+<div class="text-danger small mt-1">
+{{nameError()}}
+</div>
+
+}
+
+
+<div class="text-secondary small mt-1">
+Min 1 character - max 100 characters
+</div>
+
+
+</div>
+
+
+
+
+<div class="row">
+
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label fw-semibold">
+Email Address <span class="text-danger">*</span>
+</label>
+
+
+<input
+type="email"
+class="form-control"
+[ngModel]="email()"
+(ngModelChange)="email.set($event)"
+placeholder="john.smith@example.com">
+
+
+@if(emailError()){
+
+<div class="text-danger small mt-1">
+{{emailError()}}
+</div>
+
+}
+
+
+<div class="text-secondary small mt-1">
+Max 150 characters - valid email format
+</div>
+
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label fw-semibold">
+Phone Number <span class="text-danger">*</span>
+</label>
+
+
+<input
+type="text"
+class="form-control"
+[ngModel]="phone()"
+(ngModelChange)="phone.set($event)"
+placeholder="+1-555-ABCD">
+
+
+@if(phoneError()){
+
+<div class="text-danger small mt-1">
+{{phoneError()}}
+</div>
+
+}
+
+
+<div class="text-secondary small mt-1">
+Letters not allowed — digits, + and - only
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="d-flex align-items-center gap-2 mt-2">
+
+
+<label class="form-label fw-semibold mb-0">
+Status
+</label>
+
+
+<div class="form-check form-switch">
+
+<input
+class="form-check-input"
+type="checkbox"
+[checked]="isActive()"
+(change)="isActive.set($any($event.target).checked)">
+
+</div>
+
+
+<span class="fw-semibold">
+{{isActive() ? 'Active':'Inactive'}}
+</span>
+
+
+<span class="text-secondary small">
+— Customer can place and receive orders
+</span>
+
+
+</div>
+
+
+
+<div class="d-flex justify-content-end gap-2 mt-4">
+
+
+<button
+type="button"
+class="btn btn-outline-secondary"
+(click)="cancel()">
+
+Discard
+
+</button>
+
+
+<button
+type="button"
+class="btn btn-primary"
+(click)="submit()">
+
+Save Customer
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+</div>

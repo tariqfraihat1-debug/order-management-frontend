@@ -1,30 +1,31 @@
-import { Component,inject,OnInit,signal } from '@angular/core';
-import { ActivatedRoute,Router,RouterLink } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import {DatePipe} from '@angular/common';
+import {Component,inject,OnInit,signal} from '@angular/core';
+import {ActivatedRoute,Router,RouterLink} from '@angular/router';
 
-import { OrderDetails as OrderDetailsModel } from '../../../core/models/order/order-details.model';
-import { OrderItem } from '../../../core/models/order/order-item.model';
-import { OrderService } from '../../../core/services/order.service';
 
-import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
-import { ContentHeader } from '../../../shared/components/content-header/content-header';
-import { Loading } from '../../../shared/components/loading/loading';
-import { StatusBadge } from '../../../shared/components/status-badge/status-badge';
-import { OrderItems } from '../../../shared/components/order-items/order-items';
-import { OrderItemDialog,OrderItemFormValue } from '../../../shared/components/order-item-dialog/order-item-dialog';
+import {OrderDetails as OrderDetailsModel} from '../../../core/models/order/order-details.model';
+import {OrderItem} from '../../../core/models/order/order-item.model';
+import {OrderService} from '../../../core/services/order.service';
+import {getApiErrorMessage} from '../../../core/utils/api-error.util';
 
-import { OrderActions,OrderDetailsAction } from './components/order-actions/order-actions';
-import { OrderSummary } from './components/order-summary/order-summary';
-import { DatePipe } from '@angular/common';
+import {ConfirmDialog} from '../../../shared/components/confirm-dialog/confirm-dialog';
+import {ContentHeader} from '../../../shared/components/content-header/content-header';
+import {Loading} from '../../../shared/components/loading/loading';
+import {StatusBadge} from '../../../shared/components/status-badge/status-badge';
+import {OrderItems} from '../../../shared/components/order-items/order-items';
+import {OrderItemDialog,OrderItemFormValue} from '../../../shared/components/order-item-dialog/order-item-dialog';
+
+import {OrderActions,OrderDetailsAction} from './components/order-actions/order-actions';
+import {OrderSummary} from './components/order-summary/order-summary';
+import { Breadcrumb } from "../../../shared/components/breadcrumb/breadcrumb";
+
 export type OrderAction='confirm'|'ship'|'cancel'|'delete'|'removeItem';
 
 @Component({
-  selector:'app-order-details',
-  standalone:true,
-  imports:[
-    RouterLink,
-    FontAwesomeModule,
+selector:'app-order-details',
+standalone:true,
+imports: [
+    DatePipe,
     ContentHeader,
     Loading,
     StatusBadge,
@@ -33,209 +34,245 @@ export type OrderAction='confirm'|'ship'|'cancel'|'delete'|'removeItem';
     OrderActions,
     OrderItems,
     OrderItemDialog,
-    DatePipe
-  ],
-  templateUrl:'./order-details.html'
+    Breadcrumb
+],
+templateUrl:'./order-details.html'
 })
 export class OrderDetails implements OnInit{
+private readonly route=inject(ActivatedRoute);
+private readonly router=inject(Router);
+private readonly orderService=inject(OrderService);
 
-  private readonly route=inject(ActivatedRoute);
-  private readonly router=inject(Router);
-  private readonly orderService=inject(OrderService);
+order=signal<OrderDetailsModel|null>(null);
+loading=signal(true);
+loadError=signal('');
+actionError=signal('');
+itemError=signal('');
 
-  order=signal<OrderDetailsModel|null>(null);
-  loading=signal(true);
-  error=signal('');
+selectedAction=signal<OrderAction|null>(null);
+selectedItem=signal<OrderItem|null>(null);
 
-  selectedAction=signal<OrderAction|null>(null);
-  selectedItem=signal<OrderItem|null>(null);
+showConfirmDialog=signal(false);
+showItemDialog=signal(false);
+itemDialogMode=signal<'add'|'editQuantity'>('add');
 
-  showConfirmDialog=signal(false);
-  showItemDialog=signal(false);
 
-  itemDialogMode=signal<'add'|'editQuantity'>('add');
+ngOnInit():void{
+const id=Number(this.route.snapshot.paramMap.get('orderId'));
 
-  faChevronRight=faChevronRight;
+if(!id){
+this.loadError.set('Invalid order id.');
+this.loading.set(false);
+return;
+}
 
-  ngOnInit(){
-    const id=Number(this.route.snapshot.paramMap.get('orderId'));
+this.loadOrder(id);
+}
 
-    if(!id){
-      this.error.set('Invalid order id.');
-      this.loading.set(false);
-      return;
-    }
+loadOrder(id:number):void{
+this.loading.set(true);
+this.loadError.set('');
 
-    this.loadOrder(id);
-  }
+this.orderService.getOrderById(id).subscribe({
+next:order=>{
+this.order.set(order);
+this.loading.set(false);
+},
+error:error=>{
+this.loadError.set(
+getApiErrorMessage(error,'Failed to load order details.')
+);
+this.loading.set(false);
+}
+});
+}
 
-  loadOrder(id:number){
-    this.loading.set(true);
+isEditable():boolean{
+const state=this.order()?.orderStateName;
+return state==='Pending'||state==='Confirmed';
+}
 
-    this.orderService.getOrderById(id).subscribe({
-      next:order=>{
-        this.order.set(order);
-        this.loading.set(false);
-      },
-      error:()=>{
-        this.error.set('Failed to load order details.');
-        this.loading.set(false);
-      }
-    });
-  }
+onActionSelected(action:OrderDetailsAction):void{
+this.actionError.set('');
+this.selectedAction.set(action);
+this.showConfirmDialog.set(true);
+}
 
-  isEditable(){
-    const state=this.order()?.orderStateName;
-    return state==='Pending'||state==='Confirmed';
-  }
+confirmSelectedAction():void{
+const order=this.order();
+const action=this.selectedAction();
 
-  onActionSelected(action:OrderDetailsAction){
-    this.selectedAction.set(action);
-    this.showConfirmDialog.set(true);
-  }
+if(!order||!action)return;
 
-  confirmSelectedAction(){
-    const order=this.order();
-    const action=this.selectedAction();
+if(action==='confirm'){
+this.orderService.confirmOrder(order.orderId).subscribe({
+next:()=>this.afterAction(),
+error:error=>this.actionFailed(error,'Failed to confirm order.')
+});
+return;
+}
 
-    if(!order||!action)return;
+if(action==='ship'){
+this.orderService.shipOrder(order.orderId).subscribe({
+next:()=>this.afterAction(),
+error:error=>this.actionFailed(error,'Failed to ship order.')
+});
+return;
+}
 
-    switch(action){
+if(action==='cancel'){
+this.orderService.cancelOrder(order.orderId).subscribe({
+next:()=>this.afterAction(),
+error:error=>this.actionFailed(error,'Failed to cancel order.')
+});
+return;
+}
 
-      case 'confirm':
-        this.orderService.confirmOrder(order.orderId)
-        .subscribe(()=>this.refresh());
-        break;
+if(action==='delete'){
+this.orderService.deleteOrder(order.orderId).subscribe({
+next:()=>this.router.navigate(['/orders']),
+error:error=>this.actionFailed(error,'Failed to delete order.')
+});
+return;
+}
 
-      case 'ship':
-        this.orderService.shipOrder(order.orderId)
-        .subscribe(()=>this.refresh());
-        break;
+const item=this.selectedItem();
 
-      case 'cancel':
-        this.orderService.cancelOrder(order.orderId)
-        .subscribe(()=>this.refresh());
-        break;
+if(action==='removeItem'&&item){
+this.orderService.removeOrderItem(order.orderId,item.itemId).subscribe({
+next:()=>this.afterAction(),
+error:error=>this.actionFailed(error,'Failed to remove item.')
+});
+}
+}
 
-      case 'delete':
-        this.orderService.deleteOrder(order.orderId)
-        .subscribe(()=>this.router.navigate(['/orders']));
-        break;
+openAddItem():void{
+this.itemError.set('');
+this.selectedItem.set(null);
+this.itemDialogMode.set('add');
+this.showItemDialog.set(true);
+}
 
-      case 'removeItem':
-        const item=this.selectedItem();
+editItem(item:OrderItem):void{
+this.itemError.set('');
+this.selectedItem.set(item);
+this.itemDialogMode.set('editQuantity');
+this.showItemDialog.set(true);
+}
 
-        if(item){
-          this.orderService.removeOrderItem(order.orderId,item.itemId)
-          .subscribe(()=>this.refresh());
-        }
-        break;
-    }
-  }
+removeItem(item:OrderItem):void{
+this.actionError.set('');
+this.selectedItem.set(item);
+this.selectedAction.set('removeItem');
+this.showConfirmDialog.set(true);
+}
 
-  openAddItem(){
-    this.selectedItem.set(null);
-    this.itemDialogMode.set('add');
-    this.showItemDialog.set(true);
-  }
+addItem(value:OrderItemFormValue):void{
+const order=this.order();
+if(!order)return;
 
-  editItem(item:OrderItem){
-    this.selectedItem.set(item);
-    this.itemDialogMode.set('editQuantity');
-    this.showItemDialog.set(true);
-  }
+this.itemError.set('');
 
-  removeItem(item:OrderItem){
-    this.selectedItem.set(item);
-    this.selectedAction.set('removeItem');
-    this.showConfirmDialog.set(true);
-  }
+this.orderService.addOrderItem(order.orderId,value).subscribe({
+next:()=>{
+this.closeItemDialog();
+this.loadOrder(order.orderId);
+},
+error:error=>{
+this.itemError.set(
+getApiErrorMessage(error,'Failed to add item.')
+);
+}
+});
+}
 
-  addItem(value:OrderItemFormValue){
-    const order=this.order();
+updateItemQuantity(quantity:number):void{
+const order=this.order();
+const item=this.selectedItem();
 
-    if(!order)return;
+if(!order||!item)return;
 
-    this.orderService.addOrderItem(order.orderId,value)
-    .subscribe(()=>this.refresh());
+this.itemError.set('');
 
-    this.closeItemDialog();
-  }
+this.orderService
+.updateOrderItemQuantity(order.orderId,item.itemId,quantity)
+.subscribe({
+next:()=>{
+this.closeItemDialog();
+this.loadOrder(order.orderId);
+},
+error:error=>{
+this.itemError.set(
+getApiErrorMessage(error,'Failed to update quantity.')
+);
+}
+});
+}
 
-  updateItemQuantity(quantity:number){
-    const order=this.order();
-    const item=this.selectedItem();
+closeItemDialog():void{
+this.showItemDialog.set(false);
+this.selectedItem.set(null);
+this.itemError.set('');
+}
 
-    if(!order||!item)return;
+cancelDialog():void{
+this.showConfirmDialog.set(false);
+this.selectedAction.set(null);
+this.selectedItem.set(null);
+}
 
-    this.orderService.updateOrderItemQuantity(
-      order.orderId,
-      item.itemId,
-      quantity
-    ).subscribe(()=>this.refresh());
+confirmationTitle():string{
+const titles:Record<string,string>={
+confirm:'Confirm Order',
+ship:'Ship Order',
+cancel:'Cancel Order',
+delete:'Delete Order',
+removeItem:'Remove Item'
+};
 
-    this.closeItemDialog();
-  }
+return titles[this.selectedAction()??'']??'Confirmation';
+}
 
-  closeItemDialog(){
-    this.showItemDialog.set(false);
-    this.selectedItem.set(null);
-  }
+confirmationMessage():string{
+const messages:Record<string,string>={
+confirm:'Are you sure you want to confirm this order?',
+ship:'Are you sure you want to ship this order?',
+cancel:'Are you sure you want to cancel this order?',
+delete:'Are you sure you want to delete this order?'
+};
 
-  cancelDialog(){
-    this.showConfirmDialog.set(false);
-    this.selectedAction.set(null);
-    this.selectedItem.set(null);
-  }
+return messages[this.selectedAction()??'']
+??`Are you sure you want to remove ${this.selectedItem()?.itemName}?`;
+}
 
-  confirmationTitle(){
-    const titles:Record<string,string>={
-      confirm:'Confirm Order',
-      ship:'Ship Order',
-      cancel:'Cancel Order',
-      delete:'Delete Order',
-      removeItem:'Remove Item'
-    };
+confirmationText():string{
+const buttons:Record<string,string>={
+confirm:'Confirm',
+ship:'Ship',
+cancel:'Cancel',
+delete:'Delete',
+removeItem:'Remove'
+};
 
-    return titles[this.selectedAction()??'']??'Confirmation';
-  }
+return buttons[this.selectedAction()??'']??'Confirm';
+}
 
-  confirmationMessage(){
-    const messages:Record<string,string>={
-      confirm:'Are you sure you want to confirm this order?',
-      ship:'Are you sure you want to ship this order?',
-      cancel:'Are you sure you want to cancel this order?',
-      delete:'Are you sure you want to delete this order?'
-    };
+isDangerAction():boolean{
+return ['cancel','delete','removeItem']
+.includes(this.selectedAction()??'');
+}
 
-    return messages[this.selectedAction()??'']
-    ??`Are you sure you want to remove ${this.selectedItem()?.itemName}?`;
-  }
+private afterAction():void{
+const id=this.order()?.orderId;
 
-  confirmationText(){
-    const buttons:Record<string,string>={
-      confirm:'Confirm',
-      ship:'Ship',
-      cancel:'Cancel',
-      delete:'Delete',
-      removeItem:'Remove'
-    };
+this.cancelDialog();
+this.actionError.set('');
 
-    return buttons[this.selectedAction()??'']??'Confirm';
-  }
+if(id)this.loadOrder(id);
+}
 
-  isDangerAction(){
-    return ['cancel','delete','removeItem']
-    .includes(this.selectedAction()??'');
-  }
-
-  private refresh(){
-    const id=this.order()?.orderId;
-
-    this.cancelDialog();
-
-    if(id){
-      this.loadOrder(id);
-    }
-  }
+private actionFailed(error:unknown,fallback:string):void{
+this.actionError.set(getApiErrorMessage(error,fallback));
+this.cancelDialog();
+}
 }

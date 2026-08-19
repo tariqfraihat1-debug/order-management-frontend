@@ -1,33 +1,77 @@
-<div
-  class="d-flex flex-column align-items-center justify-content-center text-center py-5">
+<div class="text-center py-5">
 
-  <fa-icon
-    [icon]="icon()"
-    class="fs-2 text-secondary mb-3">
-  </fa-icon>
+<div class="fs-1 text-secondary mb-3">
 
-  <h3 class="fs-6 fw-semibold mb-2">
-    {{ headline() }}
-  </h3>
+@if(icon()==='orders'){
 
-  @if (description()) {
-    <p class="text-secondary small mb-3">
-      {{ description() }}
-    </p>
-  }
+📦
 
-  @if (actionLabel()) {
-    <app-button
-      variant="primary"
-      (clicked)="action.emit()">
+}
+@else if(icon()==='customers'){
 
-      @if (actionIcon()) {
-        <fa-icon [icon]="actionIcon()!"></fa-icon>
-      }
+👥
 
-      {{ actionLabel() }}
+}
+@else{
 
-    </app-button>
-  }
+🔍
+
+}
+
+</div>
+
+
+<h2 class="fs-5 fw-bold mb-2">
+{{title()}}
+</h2>
+
+
+<p class="text-secondary small mb-4">
+{{message()}}
+</p>
+
+
+<div class="d-flex justify-content-center gap-2">
+
+
+@if(secondaryText()){
+
+<button
+class="btn btn-outline-secondary">
+
+{{secondaryText()}}
+
+</button>
+
+}
+
+
+
+@if(primaryLink()){
+
+<a
+class="btn btn-primary"
+[routerLink]="primaryLink()">
+
+{{primaryText()}}
+
+</a>
+
+}
+@else if(primaryText()){
+
+<button
+class="btn btn-primary"
+(click)="primaryAction.emit()">
+
+{{primaryText()}}
+
+</button>
+
+}
+
+
+</div>
+
 
 </div>

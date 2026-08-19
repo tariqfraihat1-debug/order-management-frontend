@@ -1,0 +1,80 @@
+<div class="card overflow-hidden">
+
+
+<div class="card-header bg-white">
+
+
+<div class="d-flex align-items-center gap-2">
+
+<span class="text-primary fw-semibold">
+Orders
+</span>
+
+
+<span class="badge bg-light text-secondary">
+{{orders().length}}
+</span>
+
+</div>
+
+
+</div>
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-hover align-middle mb-0 text-nowrap">
+
+
+<thead>
+
+<tr>
+
+<th>ORDER #</th>
+
+<th>STATUS</th>
+
+<th>TOTAL</th>
+
+<th>ITEMS</th>
+
+<th>DATE</th>
+
+<th></th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+@for(order of orders(); track order.orderId){
+
+
+<tr
+
+app-customer-order-row
+
+[order]="order">
+
+</tr>
+
+
+}
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>

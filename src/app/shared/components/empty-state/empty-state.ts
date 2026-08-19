@@ -1,31 +1,29 @@
-import { Component, input, output } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  IconDefinition,
-  faInbox
-} from '@fortawesome/free-solid-svg-icons';
-
-import { Button } from '../button/button';
+import {Component, input, output} from '@angular/core';
+import {RouterLink} from '@angular/router';
 
 @Component({
-  selector: 'app-empty-state',
-  standalone: true,
-  imports: [
-    FontAwesomeModule,
-    Button
-  ],
-  templateUrl: './empty-state.html'
+selector:'app-empty-state',
+standalone:true,
+imports:[
+RouterLink
+],
+templateUrl:'./empty-state.html',
+styles:``
 })
-export class EmptyState {
-  icon = input<IconDefinition>(faInbox);
+export class EmptyState{
 
-  headline = input.required<string>();
+icon=input<string>('');
 
-  description = input<string>();
+title=input<string>('');
 
-  actionLabel = input<string>();
+message=input<string>('');
 
-  actionIcon = input<IconDefinition | null>(null);
+primaryText=input<string>('');
 
-  action = output<void>();
+primaryLink=input<string>('');
+
+secondaryText=input<string>('');
+
+primaryAction=output<void>();
+
 }

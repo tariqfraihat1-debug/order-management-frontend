@@ -1,27 +1,32 @@
 @if(loading()){
 <app-loading message="Loading order details..."></app-loading>
-}@else if(error()){
-<div class="alert alert-danger">{{error()}}</div>
+}@else if(loadError()){
+<div class="alert alert-danger">{{loadError()}}</div>
 }@else if(order();as data){
 
 <ng-template #headerLeft>
+
 <div>
 
-<div class="d-flex align-items-center gap-1 small text-secondary">
-<a routerLink="/orders" class="text-primary text-decoration-none">
-Orders
-</a>
+<app-breadcrumb
+[items]="[
+{
+label:'Orders',
+link:'/orders'
+},
+{
+label:'#ORD-' + (data.createdDate | date:'yyyy') + '-' + data.orderNumber
+}
+]">
+</app-breadcrumb>
 
-<fa-icon [icon]="faChevronRight"></fa-icon>
-
-<span>#ORD-{{data.createdDate | date:'yyyy'}}-{{data.orderNumber}}</span>
-</div>
 
 <h1 class="fs-4 fw-bold mb-0 mt-2">
-#ORD-{{data.createdDate | date:'yyyy'}}-{{data.orderNumber}}
+#ORD-{{data.createdDate|date:'yyyy'}}-{{data.orderNumber}}
 </h1>
 
 </div>
+
 </ng-template>
 
 <ng-template #headerRight>
@@ -34,6 +39,13 @@ Orders
 </app-content-header>
 
 <div class="p-3">
+
+@if(actionError()){
+<div class="alert alert-danger mb-3">
+{{actionError()}}
+</div>
+}
+
 <app-order-summary
 class="d-block mt-3"
 [order]="data">
@@ -60,6 +72,7 @@ class="d-block mt-3"
 [open]="showItemDialog()"
 [mode]="itemDialogMode()"
 [item]="selectedItem()"
+[serverError]="itemError()"
 (saved)="addItem($event)"
 (quantitySaved)="updateItemQuantity($event)"
 (cancelled)="closeItemDialog()">
