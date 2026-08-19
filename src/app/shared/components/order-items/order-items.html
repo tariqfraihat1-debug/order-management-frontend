@@ -1,4 +1,5 @@
 <div class="card">
+
 <ng-template #itemsLeft>
 <h2 class="fs-6 fw-bold mb-0">Order Items</h2>
 </ng-template>
@@ -18,16 +19,24 @@ Add Item
 </div>
 </ng-template>
 
-<app-content-header [leftTemplate]="itemsLeft" [rightTemplate]="itemsRight"></app-content-header>
+<app-content-header
+[leftTemplate]="itemsLeft"
+[rightTemplate]="itemsRight">
+</app-content-header>
 
 @if(items().length===0){
-<div class="card-body text-center py-5">
+<div class="text-center py-5">
 <h3 class="fs-6 fw-bold">No order items</h3>
-<p class="small text-secondary mb-0">This order does not contain any items.</p>
+<p class="small text-secondary mb-0">
+This order does not contain any items.
+</p>
 </div>
 }@else{
-<div class="table-responsive">
+
+<div class="table-responsive order-items-scroll">
+
 <table class="table align-middle mb-0">
+
 <thead>
 <tr>
 <th>Item ID</th>
@@ -36,28 +45,62 @@ Add Item
 <th>Qty</th>
 <th>Unit Price</th>
 <th>Line Total</th>
+
 @if(editable()){
 <th>Actions</th>
 }
+
 </tr>
 </thead>
 
 <tbody>
+
 @for(item of items();track item.itemId){
-<tr app-order-item-row [item]="item" [editable]="editable()" (editSelected)="editSelected.emit($event)" (removeSelected)="removeSelected.emit($event)"></tr>
+<tr
+app-order-item-row
+[item]="item"
+[editable]="editable()"
+[canRemove]="items().length>1"
+(editSelected)="editSelected.emit($event)"
+(removeSelected)="removeSelected.emit($event)">
+</tr>
 }
+
 </tbody>
 
 <tfoot>
+
 <tr>
-<td colspan="5" class="text-end fw-bold text-secondary">Order Total</td>
-<td class="fs-5 fw-bold">{{totalAmount()|currency:'USD':'symbol':'1.2-2'}}</td>
+
 @if(editable()){
-<td></td>
+<td colspan="6" class="text-end fw-bold text-secondary">
+Order Total
+</td>
+
+<td class="fw-bold fs-5">
+{{totalAmount()|currency:'USD':'symbol':'1.2-2'}}
+</td>
+
+}@else{
+
+<td colspan="5" class="text-end fw-bold text-secondary">
+Order Total
+</td>
+
+<td class="fw-bold fs-5">
+{{totalAmount()|currency:'USD':'symbol':'1.2-2'}}
+</td>
+
 }
+
 </tr>
+
 </tfoot>
+
 </table>
+
 </div>
+
 }
+
 </div>

@@ -1,0 +1,27 @@
+<div class="card">
+<div class="card-header fw-bold">Shipping Address (Value Object)</div>
+
+<div class="card-body">
+<div class="row g-3">
+
+<div class="col-md-4">
+<label class="form-label">City <span class="text-danger">*</span></label>
+<input class="form-control" placeholder="Enter city..."
+(input)="onCityChange($any($event.target).value)">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Street <span class="text-danger">*</span></label>
+<input class="form-control" placeholder="Enter street..."
+(input)="onStreetChange($any($event.target).value)">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Building # <span class="text-danger">*</span></label>
+<input class="form-control" placeholder="Enter building..."
+(input)="onBuildingChange($any($event.target).value)">
+</div>
+
+</div>
+</div>
+</div>

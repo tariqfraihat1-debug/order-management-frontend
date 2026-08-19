@@ -161,3 +161,32 @@
 .section-divider {
   border-top: 2px solid var(--border-divider);
 }
+.order-table-scroll {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.order-table-scroll thead {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
+
+.order-items-scroll {
+  max-height:300px;
+  overflow-y:auto;
+}
+
+.order-items-scroll thead {
+  position:sticky;
+  top:0;
+  background:white;
+  z-index:2;
+}
+.order-items-scroll tfoot {
+  position:sticky;
+  bottom:0;
+  background:white;
+  z-index:2;
+}

@@ -1,19 +1,46 @@
-<td class="text-secondary">{{formattedItemId()}}</td>
-<td>{{item().itemName}}</td>
-<td class="text-secondary">{{item().itemNameAlternate||'—'}}</td>
-<td>{{item().quantity|number:'1.2-2'}}</td>
-<td>{{item().price|currency:'USD':'symbol':'1.2-2'}}</td>
-<td class="fw-bold">{{item().quantity*item().price|currency:'USD':'symbol':'1.2-2'}}</td>
+<td>
+{{formattedItemId()}}
+</td>
+
+<td class="fw-semibold">
+{{item().itemName}}
+</td>
+
+<td class="text-secondary">
+{{item().itemNameAlternate||'—'}}
+</td>
+
+<td>
+{{item().quantity|number:'1.2-2'}}
+</td>
+
+<td>
+{{item().price|currency:'USD':'symbol':'1.2-2'}}
+</td>
+
+<td class="fw-bold">
+{{item().quantity*item().price|currency:'USD':'symbol':'1.2-2'}}
+</td>
 
 @if(editable()){
 <td>
 <div class="d-flex gap-2">
-<button class="btn btn-link text-secondary p-0 border-0" title="Update quantity" (click)="editSelected.emit(item())">
+
+<button
+class="btn btn-link text-secondary p-0 border-0"
+title="Update quantity"
+(click)="editSelected.emit(item())">
 <fa-icon [icon]="faPen"></fa-icon>
 </button>
-<button class="btn btn-link text-danger p-0 border-0" title="Remove item" (click)="removeSelected.emit(item())">
+
+<button
+class="btn btn-link text-danger p-0 border-0"
+[disabled]="!canRemove()"
+[attr.title]="canRemove()?'Remove item':'Cannot remove the last item. An order must contain at least one item.'"
+(click)="removeSelected.emit(item())">
 <fa-icon [icon]="faXmark"></fa-icon>
 </button>
+
 </div>
 </td>
 }

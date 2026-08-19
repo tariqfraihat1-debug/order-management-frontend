@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
+import { CreateOrderRequest } from '../models/order/create-order-request.model';
 import { OrderDetails } from '../models/order/order-details.model';
 import { OrderListItem } from '../models/order/order-list-item.model';
 
@@ -10,6 +12,7 @@ import { OrderListItem } from '../models/order/order-list-item.model';
   providedIn: 'root'
 })
 export class OrderService {
+
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/orders`;
 
@@ -22,6 +25,12 @@ export class OrderService {
   getOrderById(orderId: number): Observable<OrderDetails> {
     return this.http
       .get<ApiResponse<OrderDetails>>(`${this.apiUrl}/${orderId}`)
+      .pipe(map(response => response.data));
+  }
+
+  createOrder(request: CreateOrderRequest): Observable<number> {
+    return this.http
+      .post<ApiResponse<number>>(this.apiUrl, request)
       .pipe(map(response => response.data));
   }
 

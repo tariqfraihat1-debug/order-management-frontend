@@ -13,7 +13,7 @@
 </td>
 
 <td class="fw-semibold">
-  {{ order().totalAmount | number:'1.2-2' }} {{ order().currencyCode }}
+  {{ order().totalAmount | currency:'USD':'symbol':'1.2-2' }}
 </td>
 
 <td class="text-secondary">
