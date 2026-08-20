@@ -39,13 +39,13 @@
       </app-status-badge>
 
 <app-button
-  variant="secondary"
+  variant="outline-secondary"
   (clicked)="editCustomer()">
   Edit
 </app-button>
 
  <app-button
-  [variant]="data.isActive ? 'danger' : 'success'"
+  [variant]="data.isActive ? 'outline-danger' : 'outline-success'"
   (clicked)="toggleStatus()">
   {{data.isActive ? 'Deactivate' : 'Activate'}}
 </app-button>
