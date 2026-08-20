@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Customer } from '../../../core/models/customer/customer.model';
 import { CustomerService } from '../../../core/services/customer.service';
 import { getApiErrorMessage } from '../../../core/utils/api-error.util';
@@ -19,13 +19,15 @@ import { CustomerTable } from './components/customer-table/customer-table';
     CustomerFilter,
     CustomerTable,
     EmptyState
+
   ],
   templateUrl: './customer-list.html',
   styles: ``
 })
 export class CustomerList implements OnInit {
   private readonly customerService = inject(CustomerService);
-  private readonly router = inject(Router);
+private readonly router = inject(Router);
+private readonly route = inject(ActivatedRoute);
 
   customers = signal<Customer[]>([]);
   loading = signal(true);
@@ -59,9 +61,19 @@ export class CustomerList implements OnInit {
   });
 
   // Loads the customers when the page opens
-  ngOnInit(): void {
-    this.loadCustomers();
-  }
+ngOnInit(): void {
+
+  this.route.queryParamMap.subscribe(params => {
+
+    this.statusFilter.set(
+      params.get('status') ?? ''
+    );
+
+  });
+
+  this.loadCustomers();
+
+}
 
   // Loads all customers
   loadCustomers(): void {
@@ -93,9 +105,19 @@ export class CustomerList implements OnInit {
   }
 
   // Updates the customer status filter
-  onStatusChange(value: string): void {
-    this.statusFilter.set(value);
-  }
+onStatusChange(value:string):void{
+
+  this.statusFilter.set(value);
+
+  this.router.navigate([], {
+    relativeTo:this.route,
+    queryParams:{
+      status:value || null
+    },
+    queryParamsHandling:'merge'
+  });
+
+}
 
   // Navigates to the customer details page
   viewCustomer(customer: Customer): void {

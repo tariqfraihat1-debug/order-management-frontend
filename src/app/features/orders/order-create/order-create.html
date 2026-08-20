@@ -83,10 +83,11 @@
 
 <!-- Order item dialog -->
 <app-order-item-dialog
-  [open]="showItemDialog()"
-  [mode]="itemDialogMode()"
-  [item]="selectedItem()"
-  (saved)="addItem($event)"
-  (quantitySaved)="updateQuantity($event)"
-  (cancelled)="closeItemDialog()">
+[open]="showItemDialog()"
+[mode]="itemDialogMode()"
+[item]="selectedItem()"
+[serverError]="itemError()"
+(saved)="addItem($event)"
+(quantitySaved)="updateQuantity($event)"
+(cancelled)="closeItemDialog()">
 </app-order-item-dialog>

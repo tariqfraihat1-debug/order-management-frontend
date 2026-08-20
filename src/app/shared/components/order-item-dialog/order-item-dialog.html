@@ -14,9 +14,9 @@
 
 <div class="modal-body">
 
-@if(error()||serverError()){
+@if(error()||serverError()||itemError()){
 <div class="alert alert-danger py-2">
-{{error()||serverError()}}
+{{error()||serverError()||itemError()}}
 </div>
 }
 

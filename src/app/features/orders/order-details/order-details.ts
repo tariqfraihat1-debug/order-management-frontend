@@ -226,37 +226,70 @@ export class OrderDetails implements OnInit {
   }
 
   // Adds item to order
-  addItem(
-    value: OrderItemFormValue
-  ): void {
-    const order = this.order();
-
-    if (!order) {
-      return;
-    }
-
-    this.itemError.set('');
-
-    this.orderService
-      .addOrderItem(
-        order.orderId,
-        value
-      )
-      .subscribe({
-        next: () => {
-          this.closeItemDialog();
-          this.loadOrder(order.orderId);
-        },
-        error: error => {
-          this.itemError.set(
-            getApiErrorMessage(
-              error,
-              'Failed to add item.'
-            )
-          );
-        }
-      });
+  // Adds item to order
+addItem(
+  value: OrderItemFormValue
+): void {
+  const order = this.order();
+  
+  if (!order) {
+    return;
   }
+
+  const exists = order.orderItems
+    .some(
+      item =>
+        item.itemName
+          .trim()
+          .toLowerCase()
+          ===
+        value.itemName
+          .trim()
+          .toLowerCase()
+    );
+
+  if(exists){
+
+    this.itemError.set(
+      'This item already exists in the order.'
+    );
+
+    return;
+  }
+
+  this.itemError.set('');
+
+  this.orderService
+    .addOrderItem(
+      order.orderId,
+      value
+    )
+    .subscribe({
+
+      next: () => {
+
+        this.closeItemDialog();
+
+        this.loadOrder(
+          order.orderId
+        );
+
+      },
+
+      error: error => {
+
+        this.itemError.set(
+          getApiErrorMessage(
+            error,
+            'Failed to add item.'
+          )
+        );
+
+      }
+
+    });
+
+}
 
   // Updates item quantity
   updateItemQuantity(

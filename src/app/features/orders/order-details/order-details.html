@@ -69,15 +69,15 @@
 
   </div>
 
-  <app-order-item-dialog
-    [open]="showItemDialog()"
-    [mode]="itemDialogMode()"
-    [item]="selectedItem()"
-    [serverError]="itemError()"
-    (saved)="addItem($event)"
-    (quantitySaved)="updateItemQuantity($event)"
-    (cancelled)="closeItemDialog()">
-  </app-order-item-dialog>
+<app-order-item-dialog
+  [open]="showItemDialog()"
+  [mode]="itemDialogMode()"
+  [item]="selectedItem()"
+  [serverError]="itemError()"
+  (saved)="addItem($event)"
+  (quantitySaved)="updateItemQuantity($event)"
+  (cancelled)="closeItemDialog()">
+</app-order-item-dialog>
 
   <app-confirm-dialog
     [open]="showConfirmDialog()"

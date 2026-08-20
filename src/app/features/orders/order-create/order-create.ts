@@ -50,7 +50,7 @@ export class OrderCreate implements OnInit {
 
   customers = signal<Customer[]>([]);
   currencies = signal<Currency[]>([]);
-
+itemError = signal('');
   orderNumber = signal(0);
   customerId = signal(0);
   currencyCode = signal('');
@@ -134,50 +134,81 @@ export class OrderCreate implements OnInit {
     this.selectedItem.set(null);
     this.itemDialogMode.set('add');
     this.showItemDialog.set(true);
+    this.itemError.set('');
   }
 
   // Opens item dialog for quantity editing
-  editItem(
-    item: CreateOrderItemView
-  ): void {
-    this.selectedItem.set(item);
-    this.itemDialogMode.set('editQuantity');
-    this.showItemDialog.set(true);
-  }
+editItem(
+  item: CreateOrderItemView
+): void {
+  this.itemError.set('');
+  this.selectedItem.set(item);
+  this.itemDialogMode.set('editQuantity');
+  this.showItemDialog.set(true);
+}
 
   // Closes item dialog
   closeItemDialog(): void {
     this.showItemDialog.set(false);
     this.selectedItem.set(null);
+      this.itemError.set('');
   }
 
   // Adds item to order
-  addItem(
-    value: OrderItemFormValue
-  ): void {
-    const nextId =
-      this.items().length === 0
-        ? 1
-        : Math.max(
-            ...this.items()
-              .map(
-                item => item.itemId
-              )
-          ) + 1;
+addItem(
+  value: OrderItemFormValue
+): void {
 
-    this.items.update(items => [
-      ...items,
-      {
-        itemId: nextId,
-        itemName: value.itemName,
-        itemNameAlternate: value.itemNameAlternate,
-        quantity: value.quantity,
-        price: value.price
-      }
-    ]);
+  const exists = this.items()
+    .some(
+      item =>
+        item.itemName
+          .trim()
+          .toLowerCase()
+          ===
+        value.itemName
+          .trim()
+          .toLowerCase()
+    );
 
-    this.closeItemDialog();
-  }
+
+if(exists){
+  this.itemError.set(
+    'This item already exists in the order.'
+  );
+
+  return;
+}
+
+
+  const nextId =
+    this.items().length === 0
+      ? 1
+      : Math.max(
+          ...this.items()
+            .map(
+              item => item.itemId
+            )
+        ) + 1;
+
+
+  this.items.update(items => [
+    ...items,
+
+    {
+      itemId: nextId,
+      itemName: value.itemName,
+      itemNameAlternate: value.itemNameAlternate,
+      quantity: value.quantity,
+      price: value.price
+    }
+
+  ]);
+
+
+  this.closeItemDialog();
+
+}
 
   // Updates item quantity
   updateQuantity(

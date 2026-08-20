@@ -37,7 +37,7 @@ serverError=input('');
 saved=output<OrderItemFormValue>();
 quantitySaved=output<number>();
 cancelled=output<void>();
-
+itemError = input('');
 itemName=signal('');
 itemNameAlternate=signal('');
 quantity=signal(1);
