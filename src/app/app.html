@@ -1,24 +1,68 @@
 @if (isLoginPage()) {
-  <router-outlet></router-outlet>
 
-} @else {
-  <div class="min-vh-100 d-flex flex-column">
+<router-outlet></router-outlet>
 
-    <app-header></app-header>
+}
+@else {
 
-    <div class="container-fluid flex-grow-1 p-0">
-      <div class="row g-0 flex-grow-1">
+<div class="min-vh-100 d-flex flex-column">
 
-        <aside class="col-auto d-none d-lg-block">
-          <app-sidebar></app-sidebar>
-        </aside>
+<app-header></app-header>
+
+
+<div class="container-fluid flex-grow-1 p-0">
+
+<div class="row g-0 flex-grow-1">
+
+
+<!-- Desktop Sidebar -->
+<aside class="col-auto d-none d-lg-block">
+
+<app-sidebar></app-sidebar>
+
+</aside>
+
+
+
+<!-- Mobile Sidebar -->
+<div
+class="offcanvas offcanvas-start bg-dark"
+tabindex="-1"
+id="mobileSidebar"
+aria-labelledby="mobileSidebarLabel"
+style="width: 263px;">
+
+<div class="offcanvas-header text-white">
+<h5 class="offcanvas-title" id="mobileSidebarLabel">Order Management</h5>
+
+<button
+type="button"
+class="btn-close btn-close-white"
+data-bs-dismiss="offcanvas"
+aria-label="Close">
+</button>
+</div>
+
+<div class="offcanvas-body p-0">
+<app-sidebar></app-sidebar>
+</div>
+
+</div>
+
+
 
 <main class="col bg-body-tertiary">
-  <router-outlet></router-outlet>
+
+<router-outlet></router-outlet>
+
 </main>
 
-      </div>
-    </div>
 
-  </div>
+</div>
+
+</div>
+
+
+</div>
+
 }

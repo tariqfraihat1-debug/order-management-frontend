@@ -1,10 +1,6 @@
 import {Component,input} from '@angular/core';
-
-import {CustomerOrder}
-from '../../../../../core/models/customer/customer-order.model';
-
-import {CustomerOrderRow}
-from '../customer-order-row/customer-order-row';
+import {CustomerOrder}from '../../../../../core/models/customer/customer-order.model';
+import {CustomerOrderRow}from '../customer-order-row/customer-order-row';
 
 
 @Component({

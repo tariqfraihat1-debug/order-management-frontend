@@ -1,55 +1,39 @@
+<!-- Order number -->
 <td>
-
-<a
-[routerLink]="['/orders',order().orderId]"
-class="text-primary fw-semibold text-decoration-none">
-
-#ORD-{{order().createdDate | date:'yyyy'}}-{{order().orderNumber}}
-
-</a>
-
+  <a
+    [routerLink]="['/orders', order().orderId]"
+    class="text-primary fw-semibold text-decoration-none">
+    #ORD-{{order().createdDate | date:'yyyy'}}-{{order().orderNumber}}
+  </a>
 </td>
 
-
-
+<!-- Order status -->
 <td>
-
-<app-status-badge
-[status]="order().orderStateName">
-</app-status-badge>
-
+  <app-status-badge
+    [status]="order().orderStateName">
+  </app-status-badge>
 </td>
 
-
-
+<!-- Total amount -->
 <td>
-
-{{order().totalAmount | currency}}
-
+  {{order().totalAmount | currency}}
 </td>
 
-
+<!-- Items count -->
 <td>
-{{order().orderItemsCount}}
+  {{order().orderItemsCount}}
 </td>
 
-
+<!-- Created date -->
 <td>
-
-{{order().createdDate | date:'MMM d, yyyy'}}
-
+  {{order().createdDate | date:'MMM d, yyyy'}}
 </td>
 
-
-
+<!-- View action -->
 <td>
-
-<a
-[routerLink]="['/orders',order().orderId]"
-class="btn btn-link p-0 text-secondary">
-
-<fa-icon [icon]="faEye"></fa-icon>
-
-</a>
-
+  <a
+    [routerLink]="['/orders', order().orderId]"
+    class="btn btn-link p-0 text-secondary">
+    <fa-icon [icon]="faEye"></fa-icon>
+  </a>
 </td>

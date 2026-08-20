@@ -1,77 +1,92 @@
+<!-- Create order header -->
 <ng-template #createLeft>
-<app-breadcrumb
-[items]="[
-{
-label:'Orders',
-link:'/orders'
-},
-{
-label:'New Order'
-}
-]">
-</app-breadcrumb>
+  <app-breadcrumb
+    [items]="[
+      {
+        label:'Orders',
+        link:'/orders'
+      },
+      {
+        label:'New Order'
+      }
+    ]">
+  </app-breadcrumb>
 
-<h1 class="page-title fw-bold mb-0">Create Order</h1>
+  <h1 class="page-title fw-bold mb-0">
+    Create Order
+  </h1>
 </ng-template>
 
-<app-content-header [leftTemplate]="createLeft"></app-content-header>
+<!-- Content header -->
+<app-content-header
+  [leftTemplate]="createLeft">
+</app-content-header>
 
-<div class="px-4 pb-3">
-@if(error()){
-<div class="alert alert-danger mt-3">
-{{error()}}
+<div class="p-4">
+
+  <!-- Error message -->
+  @if(error()){
+    <div class="alert alert-danger mt-3">
+      {{error()}}
+    </div>
+  }
+
+  <!-- Order information -->
+  <app-order-information
+    [customers]="customers()"
+    [currencies]="currencies()"
+    [totalAmount]="totalAmount()"
+    (orderNumberChanged)="orderNumber.set($event)"
+    (customerChanged)="customerId.set($event)"
+    (currencyChanged)="currencyCode.set($event)">
+  </app-order-information>
+
+  <!-- Shipping address -->
+  <div class="mt-3">
+    <app-shipping-address
+      (cityChanged)="city.set($event)"
+      (streetChanged)="street.set($event)"
+      (buildingChanged)="buildingNumber.set($event)">
+    </app-shipping-address>
+  </div>
+
+  <!-- Order items -->
+  <div class="mt-3">
+    <app-order-items
+      [items]="items()"
+      [totalAmount]="totalAmount()"
+      [editable]="true"
+      (addSelected)="openItemDialog()"
+      (editSelected)="editItem($event)"
+      (removeSelected)="removeItem($event)">
+    </app-order-items>
+  </div>
+
+  <!-- Form actions -->
+  <div class="d-flex justify-content-end gap-2 mt-3">
+
+    <a
+      routerLink="/orders"
+      class="btn btn-outline-secondary">
+      Discard
+    </a>
+
+    <app-button
+      variant="primary"
+      (clicked)="createOrder()">
+      Create Order
+    </app-button>
+
+  </div>
+
 </div>
-}
-<app-order-information
-[customers]="customers()"
-[currencies]="currencies()"
-[totalAmount]="totalAmount()"
-(orderNumberChanged)="orderNumber.set($event)"
-(customerChanged)="customerId.set($event)"
-(currencyChanged)="currencyCode.set($event)">
-</app-order-information>
 
-<div class="mt-3">
-<app-shipping-address
-(cityChanged)="city.set($event)"
-(streetChanged)="street.set($event)"
-(buildingChanged)="buildingNumber.set($event)">
-</app-shipping-address>
-</div>
-
-<div class="mt-3">
-<app-order-items
-[items]="items()"
-[totalAmount]="totalAmount()"
-[editable]="true"
-(addSelected)="openItemDialog()"
-(editSelected)="editItem($event)"
-(removeSelected)="removeItem($event)">
-</app-order-items>
-</div>
-
-<div class="d-flex justify-content-end gap-2 mt-3">
-
-<a routerLink="/orders"
-class="btn btn-outline-secondary">
-Discard
-</a>
-
-<button
-class="btn btn-primary"
-(click)="createOrder()">
-Create Order
-</button>
-
-</div>
-
-</div>
-
+<!-- Order item dialog -->
 <app-order-item-dialog
-[open]="showItemDialog()"
-[mode]="itemDialogMode()"
-[item]="selectedItem()"
-(saved)="addItem($event)"
-(quantitySaved)="updateQuantity($event)"
-(cancelled)="closeItemDialog()">
+  [open]="showItemDialog()"
+  [mode]="itemDialogMode()"
+  [item]="selectedItem()"
+  (saved)="addItem($event)"
+  (quantitySaved)="updateQuantity($event)"
+  (cancelled)="closeItemDialog()">
 </app-order-item-dialog>

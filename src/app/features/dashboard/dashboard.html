@@ -1,88 +1,86 @@
+<!-- Dashboard header -->
 <ng-template #dashboardLeft>
-  <p class="small text-secondary mb-1">Welcome back, <strong class="text-body">{{ username() }}</strong></p>
-  <h1 class="page-title fw-bold mb-0">Dashboard</h1>
+  <p class="small text-secondary mb-1">
+    Welcome back,
+    <strong class="text-body">
+      {{username()}}
+    </strong>
+  </p>
+
+  <h1 class="page-title fw-bold mb-0">
+    Dashboard
+  </h1>
 </ng-template>
 
 <ng-template #dashboardRight>
-  <span class="small text-secondary">{{ today | date:'EEEE, MMMM d, y' }}</span>
+  <span class="small text-secondary">
+    {{today | date:'EEEE, MMMM d, y'}}
+  </span>
 </ng-template>
 
-<app-content-header [leftTemplate]="dashboardLeft" [rightTemplate]="dashboardRight"></app-content-header>
+<app-content-header
+  [leftTemplate]="dashboardLeft"
+  [rightTemplate]="dashboardRight">
+</app-content-header>
+
 
 <div class="p-4">
-  @if (loading()) {
+
+  <!-- Loading state -->
+  @if(loading()){
     <app-loading message="Loading dashboard..."></app-loading>
-  } @else if (error()) {
-    <div class="alert alert-danger" role="alert">{{ error() }}</div>
-  } @else if (dashboard(); as data) {
+  }
+
+  <!-- Error state -->
+  @else if(error()){
+    <div class="alert alert-danger" role="alert">
+      {{error()}}
+    </div>
+  }
+
+  <!-- Dashboard content -->
+  @else if(dashboard(); as data){
+
+    <!-- KPI cards -->
     <div class="row g-3 mb-3">
-      @for (kpi of kpis(); track kpi.label) {
+      @for(kpi of kpis(); track kpi.label){
         <div class="col-12 col-md-6 col-xl-3">
-          <app-kpi-card [kpi]="kpi" (selected)="onKpiClick(kpi)"></app-kpi-card>
+          <app-kpi-card
+            [kpi]="kpi"
+            (selected)="onKpiClick(kpi)">
+          </app-kpi-card>
         </div>
       }
     </div>
 
-    <div class="card mb-3">
-      <ng-template #statusLeft>
-        <h2 class="fs-6 fw-bold mb-0">Order Status Distribution</h2>
-      </ng-template>
 
-      <ng-template #statusRight>
-        <span class="small text-secondary">{{ data.totalOrders }} total orders</span>
-      </ng-template>
+    <!-- Order status distribution -->
+    <app-order-status-distribution
+      [segments]="data.orderStatusDistribution"
+      [totalOrders]="data.totalOrders"
+      (statusSelected)="onStatusSelected($event)">
+    </app-order-status-distribution>
 
-      <app-content-header [leftTemplate]="statusLeft" [rightTemplate]="statusRight"></app-content-header>
 
-      <app-order-status-distribution-bar
-        [segments]="data.orderStatusDistribution"
-        (statusSelected)="onStatusSelected($event)">
-      </app-order-status-distribution-bar>
-    </div>
+    <!-- Quick actions and recent orders -->
+    <div class="row g-3 mt-1">
 
-    <div class="row g-3">
       <div class="col-12 col-lg-3">
-        <app-quick-actions [pendingOrders]="data.pendingReview" [inactiveCustomers]="inactiveCustomers()"></app-quick-actions>
+        <app-quick-actions
+          [pendingOrders]="data.pendingReview"
+          [inactiveCustomers]="inactiveCustomers()">
+        </app-quick-actions>
       </div>
+
 
       <div class="col-12 col-lg-9">
-        <div class="card h-100">
-          <ng-template #recentOrdersLeft>
-            <h2 class="fs-6 fw-bold mb-0">Recent Orders</h2>
-          </ng-template>
-
-          <ng-template #recentOrdersRight>
-            <a routerLink="/orders" class="small text-decoration-none">View all →</a>
-          </ng-template>
-
-          <app-content-header [leftTemplate]="recentOrdersLeft" [rightTemplate]="recentOrdersRight"></app-content-header>
-
-          @if (data.recentOrders.length === 0) {
-            <div class="card-body">
-              <p class="text-secondary mb-0">No recent orders available.</p>
-            </div>
-          } @else {
-            <div class="table-responsive ">
-              <table class="table table-hover align-middle mb-0">
-                <thead>
-                  <tr>
-                    <th>Order #</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (order of data.recentOrders; track order.orderId) {
-                    <tr app-recent-order-row [order]="order"></tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          }
-        </div>
+        <app-recent-orders
+          [orders]="data.recentOrders">
+        </app-recent-orders>
       </div>
+
     </div>
+
   }
+
 </div>

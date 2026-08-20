@@ -1,39 +1,53 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
 import { CreateOrderRequest } from '../models/order/create-order-request.model';
 import { OrderDetails } from '../models/order/order-details.model';
 import { OrderListItem } from '../models/order/order-list-item.model';
+import { CreateOrderItemRequest } from '../models/order/create-order-item-request.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/orders`;
 
+  // Gets all orders
   getOrders(): Observable<OrderListItem[]> {
     return this.http
       .get<ApiResponse<OrderListItem[]>>(this.apiUrl)
-      .pipe(map(response => response.data));
+      .pipe(
+        map(response => response.data)
+      );
   }
 
+  // Gets an order by id
   getOrderById(orderId: number): Observable<OrderDetails> {
     return this.http
-      .get<ApiResponse<OrderDetails>>(`${this.apiUrl}/${orderId}`)
-      .pipe(map(response => response.data));
+      .get<ApiResponse<OrderDetails>>(
+        `${this.apiUrl}/${orderId}`
+      )
+      .pipe(
+        map(response => response.data)
+      );
   }
 
+  // Creates a new order
   createOrder(request: CreateOrderRequest): Observable<number> {
     return this.http
-      .post<ApiResponse<number>>(this.apiUrl, request)
-      .pipe(map(response => response.data));
+      .post<ApiResponse<number>>(
+        this.apiUrl,
+        request
+      )
+      .pipe(
+        map(response => response.data)
+      );
   }
 
+  // Confirms an order
   confirmOrder(orderId: number): Observable<void> {
     return this.http.post<void>(
       `${this.apiUrl}/${orderId}/confirm`,
@@ -41,6 +55,7 @@ export class OrderService {
     );
   }
 
+  // Cancels an order
   cancelOrder(orderId: number): Observable<void> {
     return this.http.post<void>(
       `${this.apiUrl}/${orderId}/cancel`,
@@ -48,6 +63,7 @@ export class OrderService {
     );
   }
 
+  // Ships an order
   shipOrder(orderId: number): Observable<void> {
     return this.http.post<void>(
       `${this.apiUrl}/${orderId}/ship`,
@@ -55,12 +71,14 @@ export class OrderService {
     );
   }
 
+  // Deletes an order
   deleteOrder(orderId: number): Observable<void> {
     return this.http.delete<void>(
       `${this.apiUrl}/${orderId}`
     );
   }
 
+  // Removes an item from an order
   removeOrderItem(
     orderId: number,
     itemId: number
@@ -70,6 +88,7 @@ export class OrderService {
     );
   }
 
+  // Updates the quantity of an order item
   updateOrderItemQuantity(
     orderId: number,
     itemId: number,
@@ -81,18 +100,14 @@ export class OrderService {
     );
   }
 
-  addOrderItem(
-    orderId: number,
-    item: {
-      itemName: string;
-      itemNameAlternate?: string | null;
-      quantity: number;
-      price: number;
-    }
-  ): Observable<void> {
-    return this.http.post<void>(
-      `${this.apiUrl}/${orderId}/items`,
-      item
-    );
-  }
+  // Adds a new item to an order
+addOrderItem(
+  orderId: number,
+  item: CreateOrderItemRequest
+): Observable<void> {
+  return this.http.post<void>(
+    `${this.apiUrl}/${orderId}/items`,
+    item
+  );
+}
 }

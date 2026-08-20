@@ -1,0 +1,68 @@
+<!-- Recent orders card -->
+<div class="card h-100">
+
+  <!-- Header -->
+  <ng-template #recentOrdersLeft>
+    <h2 class="fs-6 fw-bold mb-0">
+      Recent Orders
+    </h2>
+  </ng-template>
+
+  <ng-template #recentOrdersRight>
+    <a
+      routerLink="/orders"
+      class="small text-decoration-none">
+      View all →
+    </a>
+  </ng-template>
+
+  <app-content-header
+    [leftTemplate]="recentOrdersLeft"
+    [rightTemplate]="recentOrdersRight">
+  </app-content-header>
+
+
+  <!-- Orders content -->
+  @if(orders().length === 0){
+
+    <div class="card-body">
+      <p class="text-secondary mb-0">
+        No recent orders available.
+      </p>
+    </div>
+
+  }
+  @else{
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for(order of orders(); track order.orderId){
+
+            <tr
+              app-recent-order-row
+              [order]="order">
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+    </div>
+
+  }
+
+</div>

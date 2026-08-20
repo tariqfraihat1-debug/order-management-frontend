@@ -1,77 +1,50 @@
+<!-- Empty state -->
 <div class="text-center py-5">
+  <!-- Empty state icon -->
+  <div class="fs-1 text-secondary mb-3">
+    @if(icon()==='orders'){
+      <fa-icon [icon]="faBox"></fa-icon>
+    }
+    @else if(icon()==='customers'){
+      <fa-icon [icon]="faUsers"></fa-icon>
+    }
+    @else{
+      <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+    }
+  </div>
 
-<div class="fs-1 text-secondary mb-3">
+  <!-- Empty state title -->
+  <h2 class="fs-5 fw-bold mb-2">
+    {{title()}}
+  </h2>
 
-@if(icon()==='orders'){
+  <!-- Empty state message -->
+  <p class="text-secondary small mb-4">
+    {{message()}}
+  </p>
 
-📦
+  <!-- Empty state actions -->
+  <div class="d-flex justify-content-center gap-2">
+    @if(secondaryText()){
+      <button
+        class="btn btn-outline-secondary">
+        {{secondaryText()}}
+      </button>
+    }
 
-}
-@else if(icon()==='customers'){
-
-👥
-
-}
-@else{
-
-🔍
-
-}
-
-</div>
-
-
-<h2 class="fs-5 fw-bold mb-2">
-{{title()}}
-</h2>
-
-
-<p class="text-secondary small mb-4">
-{{message()}}
-</p>
-
-
-<div class="d-flex justify-content-center gap-2">
-
-
-@if(secondaryText()){
-
-<button
-class="btn btn-outline-secondary">
-
-{{secondaryText()}}
-
-</button>
-
-}
-
-
-
-@if(primaryLink()){
-
-<a
-class="btn btn-primary"
-[routerLink]="primaryLink()">
-
-{{primaryText()}}
-
-</a>
-
-}
-@else if(primaryText()){
-
-<button
-class="btn btn-primary"
-(click)="primaryAction.emit()">
-
-{{primaryText()}}
-
-</button>
-
-}
-
-
-</div>
-
-
+    @if(primaryLink()){
+      <a
+        class="btn btn-primary"
+        [routerLink]="primaryLink()">
+        {{primaryText()}}
+      </a>
+    }
+    @else if(primaryText()){
+      <button
+        class="btn btn-primary"
+        (click)="primaryAction.emit()">
+        {{primaryText()}}
+      </button>
+    }
+  </div>
 </div>

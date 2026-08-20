@@ -1,54 +1,15 @@
+<!-- Customer summary card -->
 <div class="card">
-
-<div class="card-body">
-
-
-<div class="row g-4">
-
-
-<div class="col-md-4">
-
-<div class="small text-secondary fw-bold mb-1">
-FULL NAME
-</div>
-
-<div class="fw-semibold">
-{{customer().customerName}}
-</div>
-
-</div>
-
-
-
-<div class="col-md-4">
-
-<div class="small text-secondary fw-bold mb-1">
-EMAIL
-</div>
-
-<div class="fw-semibold">
-{{customer().email}}
-</div>
-
-</div>
-
-
-
-<div class="col-md-4">
-
-<div class="small text-secondary fw-bold mb-1">
-PHONE
-</div>
-
-<div class="fw-semibold">
-{{customer().phone}}
-</div>
-
-</div>
-
-</div>
-
-
-</div>
-
+  <div class="card-body">
+    <div class="row g-4">
+      @for(field of fields(); track field.label){
+        <div class="col-md-4">
+          <app-detail-field
+            [label]="field.label"
+            [value]="field.value">
+          </app-detail-field>
+        </div>
+      }
+    </div>
+  </div>
 </div>

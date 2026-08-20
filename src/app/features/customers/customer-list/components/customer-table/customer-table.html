@@ -1,55 +1,26 @@
-@if(customers().length===0){
-
-<div class="text-center py-5">
-
-<h2 class="fs-6 fw-bold">
-No customers found
-</h2>
-
-<p class="small text-secondary mb-0">
-Try changing your search or filters.
-</p>
-
-</div>
-
-}@else{
-
+<!-- Customers table -->
 <div class="table-responsive">
+  <table class="table table-hover align-middle mb-0 text-nowrap">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Orders</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
 
-<table class="table table-hover align-middle mb-0 text-nowrap">
-
-<thead>
-
-<tr>
-<th>Name</th>
-<th>Email</th>
-<th>Phone</th>
-<th>Status</th>
-<th>Orders</th>
-<th>Actions</th>
-</tr>
-
-</thead>
-
-
-<tbody>
-
-@for(customer of customers(); track customer.customerId){
-
-<tr
-app-customer-row
-[customer]="customer"
-(viewSelected)="viewSelected.emit($event)"
-(editSelected)="editSelected.emit($event)">
-</tr>
-
-}
-
-</tbody>
-
-
-</table>
-
+    <tbody>
+      @for(customer of customers(); track customer.customerId){
+        <tr
+          app-customer-row
+          [customer]="customer"
+          (viewSelected)="viewSelected.emit($event)"
+          (editSelected)="editSelected.emit($event)">
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>
-
-}

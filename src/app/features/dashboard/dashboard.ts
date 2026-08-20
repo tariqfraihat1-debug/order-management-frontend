@@ -1,136 +1,173 @@
-import {DatePipe} from '@angular/common';
-import {Component,computed,inject,OnInit,signal} from '@angular/core';
-import {Router,RouterLink} from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {AuthService} from '../../core/services/auth.service';
-import {DashboardSummary} from '../../core/models/dashboard/dashboard-summary.model';
-import {DashboardService} from '../../core/services/dashboard.service';
-import {getApiErrorMessage} from '../../core/utils/api-error.util';
+import { AuthService } from '../../core/services/auth.service';
+import { DashboardSummary } from '../../core/models/dashboard/dashboard-summary.model';
+import { DashboardService } from '../../core/services/dashboard.service';
+import { getApiErrorMessage } from '../../core/utils/api-error.util';
 
-import {ContentHeader} from '../../shared/components/content-header/content-header';
-import {Loading} from '../../shared/components/loading/loading';
-import {CompactCurrencyPipe} from '../../shared/pipes/compact-currency-pipe';
+import { ContentHeader } from '../../shared/components/content-header/content-header';
+import { Loading } from '../../shared/components/loading/loading';
+import { CompactCurrencyPipe } from '../../shared/pipes/compact-currency-pipe';
 
-import {DashboardKpi,KpiCard} from './components/kpi-card/kpi-card';
-import {OrderStatusDistributionBar} from './components/order-status-distribution-bar/order-status-distribution-bar';
-import {QuickActions} from './components/quick-actions/quick-actions';
-import {RecentOrderRow} from './components/recent-order-row/recent-order-row';
+import { DashboardKpi, KpiCard } from './components/kpi-card/kpi-card';
+import { QuickActions } from './components/quick-actions/quick-actions';
+import { OrderStatusDistributionComponent } from './components/order-status-distribution/order-status-distribution';
+import { RecentOrders } from './components/recent-orders/recent-orders';
 
 @Component({
-selector:'app-dashboard',
-standalone:true,
-imports:[
-DatePipe,
-RouterLink,
-ContentHeader,
-Loading,
-KpiCard,
-OrderStatusDistributionBar,
-QuickActions,
-RecentOrderRow
-],
-providers:[CompactCurrencyPipe],
-templateUrl:'./dashboard.html'
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [
+    DatePipe,
+    ContentHeader,
+    Loading,
+    KpiCard,
+    OrderStatusDistributionComponent,
+    QuickActions,
+    RecentOrders
+  ],
+  providers: [
+    CompactCurrencyPipe
+  ],
+  templateUrl: './dashboard.html'
 })
-export class Dashboard implements OnInit{
-private readonly dashboardService=inject(DashboardService);
-private readonly authService=inject(AuthService);
-private readonly router=inject(Router);
-private readonly compactCurrencyPipe=inject(CompactCurrencyPipe);
+export class Dashboard implements OnInit {
+  private readonly dashboardService = inject(DashboardService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly compactCurrencyPipe = inject(CompactCurrencyPipe);
 
-dashboard=signal<DashboardSummary|null>(null);
-loading=signal(true);
-error=signal('');
-today=new Date();
+  dashboard = signal<DashboardSummary | null>(null);
+  loading = signal(true);
+  error = signal('');
+  today = new Date();
+  username = computed(() =>
+    this.authService.username() || 'Admin User'
+  );
 
-username=computed(()=>
-this.authService.username()||'Admin User'
-);
+  kpis = computed<DashboardKpi[]>(() => {
+    const data = this.dashboard();
 
-kpis=computed<DashboardKpi[]>(()=>{
-const data=this.dashboard();
+    if (!data) {
+      return [];
+    }
 
-if(!data)return[];
+    return [
+      {
+        label: 'Total Orders',
+        value: data.totalOrders,
+        clickable: true
+      },
+      {
+        label: 'Active Customers',
+        value: data.activeCustomers,
+        clickable: true
+      },
+      {
+        label: 'Pending Review',
+        value: data.pendingReview,
+        clickable: true,
+        highlight: true
+      },
+      {
+        label: 'Month Revenue',
+        value: this.compactCurrencyPipe.transform(
+          data.monthRevenue
+        )
+      }
+    ];
+  });
 
-return[
-{
-label:'Total Orders',
-value:data.totalOrders,
-clickable:true
-},
-{
-label:'Active Customers',
-value:data.activeCustomers,
-clickable:true
-},
-{
-label:'Pending Review',
-value:data.pendingReview,
-clickable:true,
-highlight:true
-},
-{
-label:'Month Revenue',
-value:this.compactCurrencyPipe.transform(data.monthRevenue)
-}
-];
-});
+  inactiveCustomers = computed(() => {
+    const data = this.dashboard();
 
-inactiveCustomers=computed(()=>{
-const data=this.dashboard();
-return data
-?data.totalCustomers-data.activeCustomers
-:0;
-});
+    return data
+      ? data.totalCustomers - data.activeCustomers
+      : 0;
+  });
 
-ngOnInit():void{
-this.loadDashboard();
-}
+  // Loads dashboard data when the page opens
+  ngOnInit(): void {
+    this.loadDashboard();
+  }
 
-onKpiClick(kpi:DashboardKpi):void{
-if(kpi.label==='Total Orders'){
-this.router.navigate(['/orders']);
-return;
-}
+  // Handles KPI card navigation
+  onKpiClick(kpi: DashboardKpi): void {
+    if (kpi.label === 'Total Orders') {
+      this.router.navigate([
+        '/orders'
+      ]);
 
-if(kpi.label==='Active Customers'){
-this.router.navigate(
-['/customers'],
-{queryParams:{status:'active'}}
-);
-return;
-}
+      return;
+    }
 
-if(kpi.label==='Pending Review'){
-this.router.navigate(
-['/orders'],
-{queryParams:{status:'Pending'}}
-);
-}
-}
+    if (kpi.label === 'Active Customers') {
+      this.router.navigate(
+        [
+          '/customers'
+        ],
+        {
+          queryParams: {
+            status: 'active'
+          }
+        }
+      );
 
-onStatusSelected(status:string):void{
-this.router.navigate(
-['/orders'],
-{queryParams:{status}}
-);
-}
+      return;
+    }
 
-private loadDashboard():void{
-this.loading.set(true);
-this.error.set('');
+    if (kpi.label === 'Pending Review') {
+      this.router.navigate(
+        [
+          '/orders'
+        ],
+        {
+          queryParams: {
+            status: 'Pending'
+          }
+        }
+      );
+    }
+  }
 
-this.dashboardService.getDashboard().subscribe({
-next:response=>{
-this.dashboard.set(response);
-this.loading.set(false);
-},
-error:error=>{
-this.error.set(
-getApiErrorMessage(error,'Failed to load dashboard.')
-);
-this.loading.set(false);
-}
-});
-}
+  // Handles order status navigation
+  onStatusSelected(status: string): void {
+    this.router.navigate(
+      [
+        '/orders'
+      ],
+      {
+        queryParams: {
+          status
+        }
+      }
+    );
+  }
+
+  // Loads dashboard information
+  private loadDashboard(): void {
+    this.loading.set(true);
+    this.error.set('');
+
+    this.dashboardService
+      .getDashboard()
+      .subscribe({
+        next: response => {
+          this.dashboard.set(response);
+          this.loading.set(false);
+        },
+        error: error => {
+          this.error.set(
+            getApiErrorMessage(
+              error,
+              'Failed to load dashboard.'
+            )
+          );
+
+          this.loading.set(false);
+        }
+      });
+  }
 }

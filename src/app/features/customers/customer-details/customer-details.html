@@ -1,117 +1,85 @@
+<!-- Loading state -->
 @if(loading()){
-
-<app-loading message="Loading customer details..."></app-loading>
-
+  <app-loading message="Loading customer details..."></app-loading>
 }
+
+<!-- Error state -->
 @else if(loadError()){
-
-<div class="alert alert-danger">
-{{loadError()}}
-</div>
-
+  <div class="alert alert-danger">
+    {{loadError()}}
+  </div>
 }
+
+<!-- Customer details content -->
 @else if(customer(); as data){
+  <!-- Header left content -->
+  <ng-template #headerLeft>
+    <app-breadcrumb
+      [items]="[
+        {
+          label:'Customers',
+          link:'/customers'
+        },
+        {
+          label:data.customerName
+        }
+      ]">
+    </app-breadcrumb>
 
+    <h1 class="page-title fw-bold mb-0 mt-2">
+      {{data.customerName}}
+    </h1>
+  </ng-template>
 
-<ng-template #headerLeft>
+  <!-- Header right actions -->
+  <ng-template #headerRight>
+    <div class="d-flex align-items-center gap-2">
+      <app-status-badge
+        [status]="data.isActive ? 'Active':'Inactive'">
+      </app-status-badge>
 
-<app-breadcrumb
-[items]="[
-{
-label:'Customers',
-link:'/customers'
-},
-{
-label:data.customerName
-}
-]">
-</app-breadcrumb>
+<app-button
+  variant="secondary"
+  (clicked)="editCustomer()">
+  Edit
+</app-button>
 
+ <app-button
+  [variant]="data.isActive ? 'danger' : 'success'"
+  (clicked)="toggleStatus()">
+  {{data.isActive ? 'Deactivate' : 'Activate'}}
+</app-button>
+    </div>
+  </ng-template>
 
-<h1 class="page-title fw-bold mb-0 mt-2">
-{{data.customerName}}
-</h1>
+  <!-- Content header -->
+  <app-content-header
+    [leftTemplate]="headerLeft"
+    [rightTemplate]="headerRight">
+  </app-content-header>
 
-</ng-template>
+  <!-- Customer details -->
+  <div class="p-4">
+    <app-customer-summary
+      [customer]="data">
+    </app-customer-summary>
 
+    <!-- Customer orders -->
+    <div class="mt-3">
+      <app-customer-orders
+        [orders]="orders()">
+      </app-customer-orders>
+    </div>
+  </div>
 
-
-<ng-template #headerRight>
-
-<div class="d-flex align-items-center gap-2">
-
-
-<app-status-badge
-[status]="data.isActive ? 'Active':'Inactive'">
-</app-status-badge>
-
-
-
-<button
-class="btn btn-outline-secondary btn-sm"
-(click)="editCustomer()">
-
-Edit
-
-</button>
-
-
-
-<button
-class="btn btn-sm"
-[class.btn-outline-danger]="data.isActive"
-[class.btn-outline-success]="!data.isActive"
-(click)="toggleStatus()">
-
-{{data.isActive ? 'Deactivate':'Activate'}}
-
-</button>
-
-
-</div>
-
-</ng-template>
-
-
-
-<app-content-header
-[leftTemplate]="headerLeft"
-[rightTemplate]="headerRight">
-</app-content-header>
-
-
-
-<div class="p-4">
-
-
-<app-customer-summary
-[customer]="data">
-</app-customer-summary>
-
-
-
-<div class="mt-3">
-
-<app-customer-orders
-[orders]="orders()">
-</app-customer-orders>
-
-</div>
-
-
-</div>
-
-
-
-<app-confirm-dialog
-[open]="showConfirmDialog()"
-[title]="confirmationTitle()"
-[message]="confirmationMessage()"
-[confirmText]="confirmationText()"
-[danger]="isDangerAction()"
-(confirmed)="confirmStatusChange()"
-(cancelled)="cancelStatusDialog()">
-</app-confirm-dialog>
-
-
+  <!-- Status confirmation dialog -->
+  <app-confirm-dialog
+    [open]="showConfirmDialog()"
+    [title]="confirmationTitle()"
+    [message]="confirmationMessage()"
+    [confirmText]="confirmationText()"
+    [danger]="isDangerAction()"
+    (confirmed)="confirmStatusChange()"
+    (cancelled)="cancelStatusDialog()">
+  </app-confirm-dialog>
 }

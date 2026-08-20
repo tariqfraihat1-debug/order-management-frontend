@@ -1,149 +1,122 @@
-import {Component,computed,inject,OnInit,signal} from '@angular/core';
-import {Router,RouterLink} from '@angular/router';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { Customer } from '../../../core/models/customer/customer.model';
+import { CustomerService } from '../../../core/services/customer.service';
+import { getApiErrorMessage } from '../../../core/utils/api-error.util';
+import { ContentHeader } from '../../../shared/components/content-header/content-header';
+import { Loading } from '../../../shared/components/loading/loading';
+import { EmptyState } from '../../../shared/components/empty-state/empty-state';
+import { CustomerFilter } from './components/customer-filter/customer-filter';
+import { CustomerTable } from './components/customer-table/customer-table';
 
-import {Customer} from '../../../core/models/customer/customer.model';
-import {CustomerService} from '../../../core/services/customer.service';
-import {getApiErrorMessage} from '../../../core/utils/api-error.util';
-
-import {ContentHeader} from '../../../shared/components/content-header/content-header';
-import {Loading} from '../../../shared/components/loading/loading';
-
-import {CustomerFilter} from './components/customer-filter/customer-filter';
-import {CustomerTable} from './components/customer-table/customer-table';
-import {EmptyState}
-from '../../../shared/components/empty-state/empty-state';
 @Component({
-selector:'app-customer-list',
-standalone:true,
-imports:[
-RouterLink,
-ContentHeader,
-Loading,
-CustomerFilter,
-CustomerTable,
-EmptyState
-],
-templateUrl:'./customer-list.html',
-styles:``
+  selector: 'app-customer-list',
+  standalone: true,
+  imports: [
+    RouterLink,
+    ContentHeader,
+    Loading,
+    CustomerFilter,
+    CustomerTable,
+    EmptyState
+  ],
+  templateUrl: './customer-list.html',
+  styles: ``
 })
-export class CustomerList implements OnInit{
+export class CustomerList implements OnInit {
+  private readonly customerService = inject(CustomerService);
+  private readonly router = inject(Router);
 
-private readonly customerService=inject(CustomerService);
-private readonly router=inject(Router);
+  customers = signal<Customer[]>([]);
+  loading = signal(true);
+  loadError = signal('');
+  search = signal('');
+  statusFilter = signal('');
 
-customers=signal<Customer[]>([]);
+  filteredCustomers = computed(() => {
+    const searchValue = this.search()
+      .toLowerCase()
+      .trim();
+    const status = this.statusFilter();
 
-loading=signal(true);
-loadError=signal('');
+    return this.customers().filter(customer => {
+      const matchesSearch =
+        !searchValue ||
+        customer.customerName
+          .toLowerCase()
+          .includes(searchValue) ||
+        customer.email
+          .toLowerCase()
+          .includes(searchValue);
 
-search=signal('');
-statusFilter=signal('');
+      const matchesStatus =
+        !status ||
+        (status === 'active' && customer.isActive) ||
+        (status === 'inactive' && !customer.isActive);
 
-filteredCustomers=computed(()=>{
+      return matchesSearch && matchesStatus;
+    });
+  });
 
-const searchValue=this.search()
-.toLowerCase()
-.trim();
+  // Loads the customers when the page opens
+  ngOnInit(): void {
+    this.loadCustomers();
+  }
 
-const status=this.statusFilter();
+  // Loads all customers
+  loadCustomers(): void {
+    this.loading.set(true);
+    this.loadError.set('');
 
-return this.customers().filter(customer=>{
+    this.customerService
+      .getCustomers()
+      .subscribe({
+        next: data => {
+          this.customers.set(data);
+          this.loading.set(false);
+        },
+        error: error => {
+          this.loadError.set(
+            getApiErrorMessage(
+              error,
+              'Failed to load customers.'
+            )
+          );
+          this.loading.set(false);
+        }
+      });
+  }
 
-const matchesSearch=
-!searchValue ||
-customer.customerName
-.toLowerCase()
-.includes(searchValue) ||
-customer.email
-.toLowerCase()
-.includes(searchValue);
+  // Updates the customer search value
+  onSearch(value: string): void {
+    this.search.set(value);
+  }
 
+  // Updates the customer status filter
+  onStatusChange(value: string): void {
+    this.statusFilter.set(value);
+  }
 
-const matchesStatus=
-!status ||
-(status==='active'&&customer.isActive) ||
-(status==='inactive'&&!customer.isActive);
+  // Navigates to the customer details page
+  viewCustomer(customer: Customer): void {
+    this.router.navigate([
+      '/customers',
+      customer.customerId
+    ]);
+  }
 
+  // Navigates to the customer edit page
+  editCustomer(customer: Customer): void {
+    this.router.navigate([
+      '/customers',
+      customer.customerId,
+      'edit'
+    ]);
+  }
 
-return matchesSearch&&matchesStatus;
-
-});
-
-});
-
-
-ngOnInit():void{
-this.loadCustomers();
-}
-
-
-loadCustomers():void{
-
-this.loading.set(true);
-this.loadError.set('');
-
-this.customerService
-.getCustomers()
-.subscribe({
-
-next:data=>{
-this.customers.set(data);
-this.loading.set(false);
-},
-
-error:error=>{
-
-this.loadError.set(
-getApiErrorMessage(
-error,
-'Failed to load customers.'
-)
-);
-
-this.loading.set(false);
-
-}
-
-});
-
-}
-
-
-onSearch(value:string):void{
-this.search.set(value);
-}
-
-
-onStatusChange(value:string):void{
-this.statusFilter.set(value);
-}
-
-
-viewCustomer(customer:Customer):void{
-
-this.router.navigate([
-'/customers',
-customer.customerId
-]);
-
-}
-
-
-editCustomer(customer:Customer):void{
-
-this.router.navigate([
-'/customers',
-customer.customerId,
-'edit'
-]);
-
-}
-clearFilters():void{
-
-this.search.set('');
-
-this.statusFilter.set('');
-
-}
-
+  // Clears the customer filters
+  clearFilters(): void {
+    this.search.set('');
+    this.statusFilter.set('');
+  }
 }

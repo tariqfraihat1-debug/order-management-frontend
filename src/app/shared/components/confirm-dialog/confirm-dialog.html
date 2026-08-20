@@ -1,15 +1,11 @@
-@if (open()) {
-
+<!-- Confirmation dialog -->
+@if(open()){
   <div class="modal d-block" tabindex="-1">
-
     <div class="modal-dialog modal-dialog-centered">
-
       <div class="modal-content">
-
+        <!-- Dialog header -->
         <div class="modal-header border-0">
-
           <div class="d-flex align-items-center gap-2">
-
             <fa-icon
               [icon]="faTriangleExclamation"
               [class.text-danger]="danger()"
@@ -17,53 +13,44 @@
             </fa-icon>
 
             <h5 class="modal-title mb-0">
-              {{ title() }}
+              {{title()}}
             </h5>
-
           </div>
 
-          <button
-            type="button"
-            class="btn border-0"
-            aria-label="Close"
-            (click)="cancelled.emit()">
-
-            <fa-icon [icon]="faXmark"></fa-icon>
-
-          </button>
-
+<button
+  type="button"
+  class="btn border-0 ms-auto"
+  aria-label="Close"
+  (click)="cancelled.emit()">
+  <fa-icon [icon]="faXmark"></fa-icon>
+</button>
         </div>
 
+        <!-- Dialog message -->
         <div class="modal-body pt-0">
-
           <p class="text-secondary mb-0">
-            {{ message() }}
+            {{message()}}
           </p>
-
         </div>
 
+        <!-- Dialog actions -->
         <div class="modal-footer border-0">
-
           <app-button
             variant="secondary"
             (clicked)="cancelled.emit()">
-            {{ cancelText() }}
+            {{cancelText()}}
           </app-button>
 
           <app-button
             [variant]="danger() ? 'danger' : 'primary'"
             (clicked)="confirmed.emit()">
-            {{ confirmText() }}
+            {{confirmText()}}
           </app-button>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
 
+  <!-- Modal background -->
   <div class="modal-backdrop show"></div>
-
 }
