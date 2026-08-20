@@ -2,28 +2,30 @@
   <a
     [routerLink]="['/orders', order().orderId]"
     class="fw-semibold text-primary text-decoration-none">
-    #ORD-{{ order().createdDate | date:'yyyy' }}-{{ order().orderNumber }}
+    #ORD-{{order().createdDate | date:'yyyy'}}-{{order().orderNumber}}
   </a>
 </td>
 
-<td>{{ order().customerName }}</td>
+<td>
+  {{order().customerName}}
+</td>
 
 <td>
   <app-status-badge [status]="order().orderStateName"></app-status-badge>
 </td>
 
 <td class="fw-semibold">
-  {{ order().totalAmount | currency:'USD':'symbol':'1.2-2' }}
+  {{order().totalAmount | currency:'USD':'symbol':'1.2-2'}}
 </td>
 
 <td
   [title]="order().orderItemNames.join(', ')"
   class="cursor-pointer">
-  {{ order().orderItemsCount }}
+  {{order().orderItemsCount}}
 </td>
 
 <td class="text-secondary">
-  {{ order().createdDate | date:'MMM d, y' }}
+  {{order().createdDate | date:'MMM d, y'}}
 </td>
 
 <td>
@@ -36,7 +38,7 @@
       <fa-icon [icon]="faEye"></fa-icon>
     </a>
 
-    @if (order().orderStateName === 'Pending' || order().orderStateName === 'Confirmed') {
+    @if(order().orderStateName === 'Pending' || order().orderStateName === 'Confirmed'){
       <button
         type="button"
         class="btn btn-link text-secondary p-0 border-0"
@@ -46,7 +48,7 @@
       </button>
     }
 
-    @if (order().orderStateName === 'Cancelled') {
+    @if(order().orderStateName === 'Cancelled'){
       <button
         type="button"
         class="btn btn-link text-danger p-0 border-0"

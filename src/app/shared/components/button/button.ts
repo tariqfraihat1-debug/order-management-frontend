@@ -1,11 +1,16 @@
 import { Component, input, output } from '@angular/core';
 
-export type ButtonVariant =
+export type ButtonVariant = 
   | 'primary'
   | 'secondary'
   | 'danger'
-  | 'success';
-
+  | 'success'
+  | 'light'
+  | 'outline-primary'
+  | 'outline-secondary'
+  | 'outline-danger'
+  | 'outline-success';
+  
 @Component({
   selector: 'app-button',
   standalone: true,

@@ -1,22 +1,20 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-
 import { Customer } from '../../../core/models/customer/customer.model';
 import { Currency } from '../../../core/models/currency/currency.model';
 import { CreateOrderRequest } from '../../../core/models/order/create-order-request.model';
-
 import { CustomerService } from '../../../core/services/customer.service';
 import { CurrencyService } from '../../../core/services/currency.service';
 import { OrderService } from '../../../core/services/order.service';
-
 import { getApiErrorMessage } from '../../../core/utils/api-error.util';
-
 import { Breadcrumb } from '../../../shared/components/breadcrumb/breadcrumb';
 import { Button } from '../../../shared/components/button/button';
 import { ContentHeader } from '../../../shared/components/content-header/content-header';
-import { OrderItemDialog, OrderItemFormValue } from '../../../shared/components/order-item-dialog/order-item-dialog';
+import {
+  OrderItemDialog,
+  OrderItemFormValue
+} from '../../../shared/components/order-item-dialog/order-item-dialog';
 import { OrderItems } from '../../../shared/components/order-items/order-items';
-
 import { OrderInformation } from './components/order-information/order-information';
 import { ShippingAddress } from './components/shipping-address/shipping-address';
 
@@ -41,7 +39,8 @@ interface CreateOrderItemView {
     Breadcrumb,
     Button
   ],
-  templateUrl: './order-create.html'
+  templateUrl: './order-create.html',
+  styles: ``
 })
 export class OrderCreate implements OnInit {
   private readonly orderService = inject(OrderService);
@@ -67,7 +66,8 @@ export class OrderCreate implements OnInit {
   showItemDialog = signal(false);
   selectedItem = signal<CreateOrderItemView | null>(null);
 
-  itemDialogMode = signal<'add' | 'editQuantity'>('add');
+  itemDialogMode =
+    signal<'add' | 'editQuantity'>('add');
 
   readonly maxCityLength = 50;
   readonly maxStreetLength = 100;
@@ -81,7 +81,7 @@ export class OrderCreate implements OnInit {
     )
   );
 
-  // Loads initial page data
+  // Loads customers and currencies
   ngOnInit(): void {
     this.loadCustomers();
     this.loadCurrencies();
@@ -94,7 +94,9 @@ export class OrderCreate implements OnInit {
       .subscribe({
         next: data => {
           this.customers.set(
-            data.filter(customer => customer.isActive)
+            data.filter(
+              customer => customer.isActive
+            )
           );
         },
         error: error => {
@@ -127,15 +129,17 @@ export class OrderCreate implements OnInit {
       });
   }
 
-  // Opens item dialog for adding
+  // Opens item dialog
   openItemDialog(): void {
     this.selectedItem.set(null);
     this.itemDialogMode.set('add');
     this.showItemDialog.set(true);
   }
 
-  // Opens item dialog for editing quantity
-  editItem(item: CreateOrderItemView): void {
+  // Opens item dialog for quantity editing
+  editItem(
+    item: CreateOrderItemView
+  ): void {
     this.selectedItem.set(item);
     this.itemDialogMode.set('editQuantity');
     this.showItemDialog.set(true);
@@ -147,13 +151,18 @@ export class OrderCreate implements OnInit {
     this.selectedItem.set(null);
   }
 
-  // Adds new order item
-  addItem(value: OrderItemFormValue): void {
+  // Adds item to order
+  addItem(
+    value: OrderItemFormValue
+  ): void {
     const nextId =
       this.items().length === 0
         ? 1
         : Math.max(
-            ...this.items().map(item => item.itemId)
+            ...this.items()
+              .map(
+                item => item.itemId
+              )
           ) + 1;
 
     this.items.update(items => [
@@ -171,7 +180,9 @@ export class OrderCreate implements OnInit {
   }
 
   // Updates item quantity
-  updateQuantity(quantity: number): void {
+  updateQuantity(
+    quantity: number
+  ): void {
     const item = this.selectedItem();
 
     if (!item) {
@@ -185,7 +196,8 @@ export class OrderCreate implements OnInit {
               ...current,
               quantity
             }
-          : current
+          :
+            current
       )
     );
 
@@ -193,7 +205,9 @@ export class OrderCreate implements OnInit {
   }
 
   // Removes item from order
-  removeItem(item: CreateOrderItemView): void {
+  removeItem(
+    item: CreateOrderItemView
+  ): void {
     this.items.update(items =>
       items.filter(
         current =>
@@ -202,11 +216,14 @@ export class OrderCreate implements OnInit {
     );
   }
 
-  // Validates order information
+  // Validates order data
   validate(): boolean {
     this.error.set('');
 
-    if (!this.orderNumber() || this.orderNumber() <= 0) {
+    if (!this.orderNumber()
+      ||
+      this.orderNumber() <= 0) {
+
       this.error.set(
         'Order number must be greater than 0.'
       );
@@ -235,7 +252,10 @@ export class OrderCreate implements OnInit {
     const building = this.buildingNumber().trim();
 
     if (!city) {
-      this.error.set('City is required.');
+      this.error.set(
+        'City is required.'
+      );
+
       return false;
     }
 
@@ -248,7 +268,10 @@ export class OrderCreate implements OnInit {
     }
 
     if (!street) {
-      this.error.set('Street is required.');
+      this.error.set(
+        'Street is required.'
+      );
+
       return false;
     }
 
@@ -285,10 +308,11 @@ export class OrderCreate implements OnInit {
     }
 
     const names = this.items()
-      .map(item =>
-        item.itemName
-          .trim()
-          .toLowerCase()
+      .map(
+        item =>
+          item.itemName
+            .trim()
+            .toLowerCase()
       );
 
     if (new Set(names).size !== names.length) {
@@ -302,7 +326,7 @@ export class OrderCreate implements OnInit {
     return true;
   }
 
-  // Creates a new order
+  // Creates order
   createOrder(): void {
     if (!this.validate()) {
       return;

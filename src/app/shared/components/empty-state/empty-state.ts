@@ -2,14 +2,16 @@ import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBox, faMagnifyingGlass, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { Button } from "../button/button";
 
 @Component({
   selector: 'app-empty-state',
   standalone: true,
   imports: [
     RouterLink,
-    FontAwesomeModule
-  ],
+    FontAwesomeModule,
+    Button
+],
   templateUrl: './empty-state.html',
   styles: ``
 })

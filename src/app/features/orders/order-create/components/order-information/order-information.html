@@ -1,46 +1,91 @@
+<!-- Order information card -->
 <div class="card">
-<div class="card-header fw-bold">Order Information</div>
+  <div class="card-header fw-bold">
+    Order Information
+  </div>
 
-<div class="card-body">
-<div class="row g-3">
+  <div class="card-body">
+    <div class="row g-3">
 
-<div class="col-md-6">
-<label class="form-label">Customer <span class="text-danger">*</span></label>
-<select class="form-select" (change)="onCustomerChange($any($event.target).value)">
-<option value="">Select active customer...</option>
-@for(customer of customers();track customer.customerId){
-<option [value]="customer.customerId">{{customer.customerName}}</option>
-}
-</select>
-<small class="text-secondary">Only active customers shown</small>
-</div>
+      <!-- Customer selection -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Customer <span class="text-danger">*</span>
+        </label>
 
-<div class="col-md-6">
-<label class="form-label">Currency <span class="text-danger">*</span></label>
-<select class="form-select" (change)="onCurrencyChange($any($event.target).value)">
-<option value="">Select currency...</option>
-@for(currency of currencies();track currency.currencyCode){
-<option [value]="currency.currencyCode">
-{{currency.currencyCode}} — {{currency.currencyName}}
-</option>
-}
-</select>
-</div>
+        <select
+          class="form-select"
+          (change)="onCustomerChange($any($event.target).value)">
+          <option value="">
+            Select active customer...
+          </option>
 
-<div class="col-md-6">
-<label class="form-label">Order Number <span class="text-danger">*</span></label>
-<input type="number" class="form-control" min="1"
-(input)="onOrderNumberChange($any($event.target).value)">
-<small class="text-secondary">Positive integer; no zero/negatives</small>
-</div>
+          @for(customer of customers(); track customer.customerId){
+            <option [value]="customer.customerId">
+              {{customer.customerName}}
+            </option>
+          }
+        </select>
 
-<div class="col-md-6">
-<label class="form-label">Total Amount</label>
-<input class="form-control" readonly
-[value]="totalAmount() | currency:'USD':'symbol':'1.2-2'">
-<small class="text-secondary">Domain-set - not in POST body</small>
-</div>
+        <small class="text-secondary">
+          Only active customers shown
+        </small>
+      </div>
 
-</div>
-</div>
+      <!-- Currency selection -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Currency <span class="text-danger">*</span>
+        </label>
+
+        <select
+          class="form-select"
+          (change)="onCurrencyChange($any($event.target).value)">
+          <option value="">
+            Select currency...
+          </option>
+
+          @for(currency of currencies(); track currency.currencyCode){
+            <option [value]="currency.currencyCode">
+              {{currency.currencyCode}} — {{currency.currencyName}}
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Order number -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Order Number <span class="text-danger">*</span>
+        </label>
+
+        <input
+          type="number"
+          class="form-control"
+          min="1"
+          (input)="onOrderNumberChange($any($event.target).value)">
+
+        <small class="text-secondary">
+          Positive integer; no zero/negatives
+        </small>
+      </div>
+
+      <!-- Total amount -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Total Amount
+        </label>
+
+        <input
+          class="form-control"
+          readonly
+          [value]="totalAmount() | currency:'USD':'symbol':'1.2-2'">
+
+        <small class="text-secondary">
+          Domain-set - not in POST body
+        </small>
+      </div>
+
+    </div>
+  </div>
 </div>

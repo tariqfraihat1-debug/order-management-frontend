@@ -1,236 +1,111 @@
 <ng-template #ordersLeft>
-<h1 class="page-title fw-bold mb-0">Orders</h1>
+  <h1 class="page-title fw-bold mb-0">
+    Orders
+  </h1>
 </ng-template>
 
 <ng-template #ordersRight>
-<a routerLink="/orders/create" class="btn btn-primary">+ New Order</a>
+  <a
+    routerLink="/orders/create"
+    class="btn btn-primary">
+    + New Order
+  </a>
 </ng-template>
 
-<app-content-header [leftTemplate]="ordersLeft" [rightTemplate]="ordersRight"></app-content-header>
+<app-content-header
+  [leftTemplate]="ordersLeft"
+  [rightTemplate]="ordersRight">
+</app-content-header>
 
 <div class="p-4">
 
 @if(loading()){
-<app-loading message="Loading orders..."></app-loading>
+  <app-loading message="Loading orders..."></app-loading>
 }
 @else if(loadError()){
-<div class="alert alert-danger">{{loadError()}}</div>
+  <div class="alert alert-danger">
+    {{loadError()}}
+  </div>
 }
 @else{
 
-@if(actionError()){
-<div class="alert alert-danger">{{actionError()}}</div>
-}
+  @if(actionError()){
+    <div class="alert alert-danger">
+      {{actionError()}}
+    </div>
+  }
 
-<div class="card">
+  <div class="card">
 
-<div class="card-body border-bottom py-3">
+    <div class="card-body border-bottom py-3">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
 
-<div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <app-order-filter
+          [customers]="customers()"
+          [search]="search()"
+          [status]="statusFilter()"
+          [customer]="customerFilter()"
+          [date]="dateFilter()"
+          (searchChanged)="onSearch($event)"
+          (statusChanged)="onStatusChange($event)"
+          (customerChanged)="onCustomerChange($event)"
+          (dateChanged)="onDateChange($event)">
+        </app-order-filter>
 
-<div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1">
+        <span class="small text-secondary">
+          {{filteredOrders().length}} orders
+        </span>
 
-<app-search-input
-placeholder="Search by order # or customer..."
-[value]="search()"
-(valueChange)="onSearch($event)">
-</app-search-input>
+      </div>
+    </div>
 
-<select class="form-select w-auto"
-[value]="statusFilter()"
-(change)="onStatusChange($any($event.target).value)">
-<option value="">Status: All</option>
-<option value="Pending">Pending</option>
-<option value="Confirmed">Confirmed</option>
-<option value="Shipped">Shipped</option>
-<option value="Cancelled">Cancelled</option>
-</select>
+    @if(filteredOrders().length===0){
+      <div class="card-body">
 
-<select class="form-select w-auto"
-[value]="customerFilter()"
-(change)="onCustomerChange($any($event.target).value)">
-<option value="">Customer: All</option>
-@for(customer of customers(); track customer){
-<option [value]="customer">{{customer}}</option>
-}
-</select>
+        @if(search() || statusFilter() || customerFilter() || dateFilter()){
+          <app-empty-state
+            icon="search"
+            title="No orders match your filters"
+            message="Try adjusting your search or filters, or clear all filters to see every order."
+            primaryText="Clear Filters"
+            (primaryAction)="clearFilters()">
+          </app-empty-state>
+        }
+        @else{
+          <app-empty-state
+            icon="orders"
+            title="No orders yet"
+            message="Start by creating your first order for an active customer."
+            primaryText="Create First Order"
+            primaryLink="/orders/create">
+          </app-empty-state>
+        }
 
-<select class="form-select w-auto"
-[value]="dateFilter()"
-(change)="onDateChange($any($event.target).value)">
-<option value="">Date Range</option>
-<option value="today">Today</option>
-<option value="7days">Last 7 Days</option>
-<option value="30days">Last 30 Days</option>
-</select>
+      </div>
+    }
+    @else{
 
-</div>
+      <app-order-table
+        [orders]="filteredOrders()"
+        (actionSelected)="onActionSelected($event)"
+        (deleteSelected)="onDeleteSelected($event)"
+        (sortSelected)="sortBy($event)">
+      </app-order-table>
 
-<span class="small text-secondary">
-{{filteredOrders().length}} orders
-</span>
+    }
 
-</div>
-
-</div>
-
-
-@if(filteredOrders().length===0){
-
-<div class="card-body">
-
-@if(search() || statusFilter() || customerFilter() || dateFilter()){
-
-<app-empty-state
-icon="search"
-title="No orders match your filters"
-message="Try adjusting your search or filters, or clear all filters to see every order."
-primaryText="Clear Filters"
-(primaryAction)="clearFilters()">
-</app-empty-state>
-
-}
-@else{
-
-<app-empty-state
-icon="orders"
-title="No orders yet"
-message="Start by creating your first order for an active customer."
-primaryText="Create First Order"
-primaryLink="/orders/create">
-</app-empty-state>
+  </div>
 
 }
 
 </div>
 
-}
-@else{
-
-<div class="table-responsive order-table-scroll">
-
-<table class="table table-hover align-middle mb-0">
-
-<thead>
-<tr>
-<th class="cursor-pointer" (click)="sortBy('orderNumber')">Order #</th>
-<th class="cursor-pointer" (click)="sortBy('customerName')">Customer</th>
-<th class="cursor-pointer" (click)="sortBy('orderStateName')">Status</th>
-<th class="cursor-pointer" (click)="sortBy('totalAmount')">Total Amount</th>
-<th>Items</th>
-<th class="cursor-pointer" (click)="sortBy('createdDate')">Created</th>
-<th>Actions</th>
-</tr>
-</thead>
-
-<tbody>
-
-@for(order of filteredOrders(); track order.orderId){
-
-<tr
-app-order-row
-[order]="order"
-(actionSelected)="onActionSelected($event)"
-(deleteSelected)="onDeleteSelected($event)">
-</tr>
-
-}
-
-</tbody>
-
-</table>
-
-</div>
-
-}
-
-</div>
-
-}
-
-</div>
-
-
-@if(selectedOrder(); as order){
-
-@if(showActionMenu()){
-
-<div class="modal d-block" tabindex="-1">
-
-<div class="modal-dialog modal-dialog-centered">
-
-<div class="modal-content">
-
-<div class="modal-header">
-
-<h5 class="modal-title">Order Actions</h5>
-
-<button
-class="btn-close"
-(click)="cancelDialog()">
-</button>
-
-</div>
-
-<div class="modal-body">
-
-<p class="text-secondary">
-Choose an action for this order.
-</p>
-
-<div class="d-grid gap-2">
-
-@if(order.orderStateName==='Pending'){
-
-<button class="btn btn-primary"
-(click)="chooseAction('confirm')">
-Confirm Order
-</button>
-
-<button class="btn btn-outline-danger"
-(click)="chooseAction('cancel')">
-Cancel Order
-</button>
-
-}
-
-@if(order.orderStateName==='Confirmed'){
-
-<button class="btn btn-primary"
-(click)="chooseAction('ship')">
-Ship Order
-</button>
-
-<button class="btn btn-outline-danger"
-(click)="chooseAction('cancel')">
-Cancel Order
-</button>
-
-}
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="modal-backdrop show"></div>
-
-}
-
-
-<app-confirm-dialog
-[open]="showConfirmDialog()"
-[title]="selectedAction()==='confirm'?'Confirm Order':selectedAction()==='ship'?'Ship Order':selectedAction()==='cancel'?'Cancel Order':'Delete Order'"
-[message]="selectedAction()==='confirm'?'Are you sure you want to confirm this order?':selectedAction()==='ship'?'Are you sure you want to ship this order?':selectedAction()==='cancel'?'Are you sure you want to cancel this order?':'Are you sure you want to permanently delete this cancelled order?'"
-[confirmText]="selectedAction()==='confirm'?'Confirm':selectedAction()==='ship'?'Ship':selectedAction()==='cancel'?'Cancel Order':'Delete'"
-[danger]="selectedAction()==='cancel'||selectedAction()==='delete'"
-(confirmed)="confirmSelectedAction()"
-(cancelled)="cancelDialog()">
-</app-confirm-dialog>
-
-}
+<app-order-action-dialog
+  [order]="selectedOrder()"
+  [showMenu]="showActionMenu()"
+  [showConfirm]="showConfirmDialog()"
+  [selectedAction]="selectedAction()"
+  (actionSelected)="chooseAction($event)"
+  (confirmed)="confirmSelectedAction()"
+  (cancelled)="cancelDialog()">
+</app-order-action-dialog>

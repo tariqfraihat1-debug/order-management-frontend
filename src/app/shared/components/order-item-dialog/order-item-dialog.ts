@@ -5,6 +5,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {faXmark} from '@fortawesome/free-solid-svg-icons';
 
 import {OrderItem} from '../../../core/models/order/order-item.model';
+import { Button } from "../button/button";
 
 export type OrderItemDialogMode='add'|'editQuantity';
 
@@ -18,10 +19,11 @@ price:number;
 @Component({
 selector:'app-order-item-dialog',
 standalone:true,
-imports:[
-FormsModule,
-CurrencyPipe,
-FontAwesomeModule
+imports: [
+    FormsModule,
+    CurrencyPipe,
+    FontAwesomeModule,
+    Button
 ],
 templateUrl:'./order-item-dialog.html'
 })

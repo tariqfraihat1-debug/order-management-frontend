@@ -108,12 +108,19 @@ Line Total Preview
 </div>
 
 <div class="modal-footer">
-<button class="btn btn-light border" (click)="cancel()">
+
+<app-button
+variant="light"
+(clicked)="cancel()">
 Cancel
-</button>
-<button class="btn btn-primary" (click)="save()">
+</app-button>
+
+<app-button
+variant="primary"
+(clicked)="save()">
 {{mode()==='add'?'Add Item':'Update Quantity'}}
-</button>
+</app-button>
+
 </div>
 
 </div>

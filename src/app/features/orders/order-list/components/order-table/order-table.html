@@ -1,0 +1,58 @@
+<div class="table-responsive order-table-scroll">
+  <table class="table table-hover align-middle mb-0">
+
+    <thead>
+      <tr>
+        <th
+          class="cursor-pointer"
+          (click)="sortSelected.emit('orderNumber')">
+          Order #
+        </th>
+
+        <th
+          class="cursor-pointer"
+          (click)="sortSelected.emit('customerName')">
+          Customer
+        </th>
+
+        <th
+          class="cursor-pointer"
+          (click)="sortSelected.emit('orderStateName')">
+          Status
+        </th>
+
+        <th
+          class="cursor-pointer"
+          (click)="sortSelected.emit('totalAmount')">
+          Total Amount
+        </th>
+
+        <th>
+          Items
+        </th>
+
+        <th
+          class="cursor-pointer"
+          (click)="sortSelected.emit('createdDate')">
+          Created
+        </th>
+
+        <th>
+          Actions
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for(order of orders(); track order.orderId){
+        <tr
+          app-order-row
+          [order]="order"
+          (actionSelected)="actionSelected.emit($event)"
+          (deleteSelected)="deleteSelected.emit($event)">
+        </tr>
+      }
+    </tbody>
+
+  </table>
+</div>

@@ -16,11 +16,9 @@ RouterLink
 ],
 templateUrl:'./breadcrumb.html',
 styles:`
-
 .breadcrumb-item::before{
     content:none !important;
 }
-
 `
 })
 export class Breadcrumb{

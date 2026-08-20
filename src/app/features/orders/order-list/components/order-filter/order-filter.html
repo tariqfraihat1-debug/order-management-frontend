@@ -1,0 +1,63 @@
+<div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1">
+
+  <app-search-input
+    placeholder="Search by order # or customer..."
+    [value]="search()"
+    (valueChange)="searchChanged.emit($event)">
+  </app-search-input>
+
+  <select
+    class="form-select w-auto"
+    [value]="status()"
+    (change)="statusChanged.emit($any($event.target).value)">
+    <option value="">
+      Status: All
+    </option>
+    <option value="Pending">
+      Pending
+    </option>
+    <option value="Confirmed">
+      Confirmed
+    </option>
+    <option value="Shipped">
+      Shipped
+    </option>
+    <option value="Cancelled">
+      Cancelled
+    </option>
+  </select>
+
+  <select
+    class="form-select w-auto"
+    [value]="customer()"
+    (change)="customerChanged.emit($any($event.target).value)">
+    <option value="">
+      Customer: All
+    </option>
+
+    @for(item of customers(); track item){
+      <option [value]="item">
+        {{item}}
+      </option>
+    }
+  </select>
+
+  <select
+    class="form-select w-auto"
+    [value]="date()"
+    (change)="dateChanged.emit($any($event.target).value)">
+    <option value="">
+      Date Range
+    </option>
+    <option value="today">
+      Today
+    </option>
+    <option value="7days">
+      Last 7 Days
+    </option>
+    <option value="30days">
+      Last 30 Days
+    </option>
+  </select>
+
+</div>

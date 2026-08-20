@@ -6,10 +6,18 @@ import { faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { OrderListItem } from '../../../../../core/models/order/order-list-item.model';
 import { StatusBadge } from '../../../../../shared/components/status-badge/status-badge';
 
+
 @Component({
   selector: 'tr[app-order-row]',
   standalone: true,
-  imports: [DatePipe, CurrencyPipe, RouterLink, FontAwesomeModule, StatusBadge],
+  imports: [
+    DatePipe,
+    CurrencyPipe,
+    RouterLink,
+    FontAwesomeModule,
+    StatusBadge
+    
+],
   templateUrl: './order-row.html'
 })
 export class OrderRow {
@@ -22,10 +30,12 @@ export class OrderRow {
   faPen = faPen;
   faTrash = faTrash;
 
+  // Emits the current order for the action menu
   onAction(): void {
     this.actionSelected.emit(this.order());
   }
 
+  // Emits the current order for deletion
   onDelete(): void {
     this.deleteSelected.emit(this.order());
   }

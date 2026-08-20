@@ -1,5 +1,6 @@
 <!-- Empty state -->
 <div class="text-center py-5">
+
   <!-- Empty state icon -->
   <div class="fs-1 text-secondary mb-3">
     @if(icon()==='orders'){
@@ -25,26 +26,29 @@
 
   <!-- Empty state actions -->
   <div class="d-flex justify-content-center gap-2">
+
     @if(secondaryText()){
-      <button
-        class="btn btn-outline-secondary">
+      <app-button
+        variant="outline-secondary">
         {{secondaryText()}}
-      </button>
+      </app-button>
     }
 
     @if(primaryLink()){
-      <a
-        class="btn btn-primary"
+      <app-button
+        variant="primary"
         [routerLink]="primaryLink()">
         {{primaryText()}}
-      </a>
+      </app-button>
     }
     @else if(primaryText()){
-      <button
-        class="btn btn-primary"
-        (click)="primaryAction.emit()">
+      <app-button
+        variant="primary"
+        (clicked)="primaryAction.emit()">
         {{primaryText()}}
-      </button>
+      </app-button>
     }
+
   </div>
+
 </div>

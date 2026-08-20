@@ -1,91 +1,92 @@
 @if(loading()){
-<app-loading message="Loading order details..."></app-loading>
-}@else if(loadError()){
-<div class="alert alert-danger">{{loadError()}}</div>
-}@else if(order();as data){
-
-<ng-template #headerLeft>
-
-<div>
-
-<app-breadcrumb
-[items]="[
-{
-label:'Orders',
-link:'/orders'
-},
-{
-label:'#ORD-' + (data.createdDate | date:'yyyy') + '-' + data.orderNumber
+  <app-loading message="Loading order details..."></app-loading>
 }
-]">
-</app-breadcrumb>
-
-
-<h1 class="fs-4 fw-bold mb-0 mt-2">
-#ORD-{{data.createdDate|date:'yyyy'}}-{{data.orderNumber}}
-</h1>
-
-</div>
-
-</ng-template>
-
-<ng-template #headerRight>
-<app-status-badge [status]="data.orderStateName"></app-status-badge>
-</ng-template>
-
-<app-content-header
-[leftTemplate]="headerLeft"
-[rightTemplate]="headerRight">
-</app-content-header>
-
-<div class="p-3">
-
-@if(actionError()){
-<div class="alert alert-danger mb-3">
-{{actionError()}}
-</div>
+@else if(loadError()){
+  <div class="alert alert-danger">
+    {{loadError()}}
+  </div>
 }
+@else if(order();as data){
 
-<app-order-summary
-class="d-block mt-3"
-[order]="data">
-</app-order-summary>
+  <ng-template #headerLeft>
+    <div>
+      <app-breadcrumb
+        [items]="[
+          {
+            label:'Orders',
+            link:'/orders'
+          },
+          {
+            label:'#ORD-' + (data.createdDate | date:'yyyy') + '-' + data.orderNumber
+          }
+        ]">
+      </app-breadcrumb>
 
-<app-order-actions
-[order]="data"
-(actionSelected)="onActionSelected($event)">
-</app-order-actions>
+      <h1 class="fs-4 fw-bold mb-0 mt-2">
+        #ORD-{{data.createdDate | date:'yyyy'}}-{{data.orderNumber}}
+      </h1>
+    </div>
+  </ng-template>
 
-<app-order-items
-class="d-block mt-3"
-[items]="data.orderItems"
-[totalAmount]="data.totalAmount"
-[editable]="isEditable()"
-(addSelected)="openAddItem()"
-(editSelected)="editItem($event)"
-(removeSelected)="removeItem($event)">
-</app-order-items>
+  <ng-template #headerRight>
+    <app-status-badge
+      [status]="data.orderStateName">
+    </app-status-badge>
+  </ng-template>
 
-</div>
+  <app-content-header
+    [leftTemplate]="headerLeft"
+    [rightTemplate]="headerRight">
+  </app-content-header>
 
-<app-order-item-dialog
-[open]="showItemDialog()"
-[mode]="itemDialogMode()"
-[item]="selectedItem()"
-[serverError]="itemError()"
-(saved)="addItem($event)"
-(quantitySaved)="updateItemQuantity($event)"
-(cancelled)="closeItemDialog()">
-</app-order-item-dialog>
+  <div class="p-3">
 
-<app-confirm-dialog
-[open]="showConfirmDialog()"
-[title]="confirmationTitle()"
-[message]="confirmationMessage()"
-[confirmText]="confirmationText()"
-[danger]="isDangerAction()"
-(confirmed)="confirmSelectedAction()"
-(cancelled)="cancelDialog()">
-</app-confirm-dialog>
+    @if(actionError()){
+      <div class="alert alert-danger mb-3">
+        {{actionError()}}
+      </div>
+    }
+
+    <app-order-summary
+      class="d-block mt-3"
+      [order]="data">
+    </app-order-summary>
+
+    <app-order-actions
+      [order]="data"
+      (actionSelected)="onActionSelected($event)">
+    </app-order-actions>
+
+    <app-order-items
+      class="d-block mt-3"
+      [items]="data.orderItems"
+      [totalAmount]="data.totalAmount"
+      [editable]="isEditable()"
+      (addSelected)="openAddItem()"
+      (editSelected)="editItem($event)"
+      (removeSelected)="removeItem($event)">
+    </app-order-items>
+
+  </div>
+
+  <app-order-item-dialog
+    [open]="showItemDialog()"
+    [mode]="itemDialogMode()"
+    [item]="selectedItem()"
+    [serverError]="itemError()"
+    (saved)="addItem($event)"
+    (quantitySaved)="updateItemQuantity($event)"
+    (cancelled)="closeItemDialog()">
+  </app-order-item-dialog>
+
+  <app-confirm-dialog
+    [open]="showConfirmDialog()"
+    [title]="confirmationTitle()"
+    [message]="confirmationMessage()"
+    [confirmText]="confirmationText()"
+    [danger]="isDangerAction()"
+    (confirmed)="confirmSelectedAction()"
+    (cancelled)="cancelDialog()">
+  </app-confirm-dialog>
 
 }

@@ -1,42 +1,27 @@
 <nav>
+  <ol class="breadcrumb mb-0 small">
+    @for(item of items(); track item.label; let last = $last){
+      <li class="breadcrumb-item d-flex align-items-center">
+        @if(item.link && !last){
+          <a
+            [routerLink]="item.link"
+            class="text-primary text-decoration-none fw-semibold">
+            {{item.label}}
+          </a>
+        }
+        @else{
+          <span class="text-secondary">
+            {{item.label}}
+          </span>
 
-<ol class="breadcrumb mb-0 small">
+        }
+        @if(!last){
+          <span class="ms-2 text-secondary">
+            ›
+          </span>
 
-@for(item of items(); track item.label; let last = $last){
-
-<li class="breadcrumb-item d-flex align-items-center">
-
-@if(item.link && !last){
-
-<a
-[routerLink]="item.link"
-class="text-primary text-decoration-none fw-semibold">
-
-{{item.label}}
-
-</a>
-
-}
-@else{
-
-<span class="text-secondary">
-{{item.label}}
-</span>
-
-}
-
-@if(!last){
-
-<span class="ms-1 text-secondary">
-›
-</span>
-
-}
-
-</li>
-
-}
-
-</ol>
-
+        }
+      </li>
+    }
+  </ol>
 </nav>

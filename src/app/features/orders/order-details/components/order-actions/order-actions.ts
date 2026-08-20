@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBox, faCheck, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { OrderDetails } from '../../../../../core/models/order/order-details.model';
+import { Button } from "../../../../../shared/components/button/button";
 
 export type OrderDetailsAction =
   | 'confirm'
@@ -12,7 +13,7 @@ export type OrderDetailsAction =
 @Component({
   selector: 'app-order-actions',
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, Button],
   templateUrl: './order-actions.html'
 })
 export class OrderActions {
